@@ -1,0 +1,7 @@
+source_schema,source_table,source_column,target_schema,target_table,target_column,transformation_type,transformation_logic
+public,products_bronze_20260813_152251,product_category,public,products_silver,product_category,deduplication,drop_duplicates()
+public,products_bronze_20260813_152251,product_name,public,products_silver,product_name,text_cleanse,lower() and trim()
+public,products_bronze_20260813_152251,sales_date,public,products_silver,sales_date,date_cleanse,convert to date format 'YYYY-MM-DD'
+public,products_bronze_20260813_152251,sales_amount,public,products_silver,sales_amount,null_check,replace null with 0
+public,stores_bronze_20260813_152251,store_name,public,stores_silver,store_name,text_cleanse,lower() and trim()
+public,stores_bronze_20260813_152251,store_address,public,stores_silver,store_address,text_cleanse,lower() and trim()

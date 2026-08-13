@@ -1,0 +1,26 @@
+{
+  "run_id": "20260813_154406",
+  "business_intent": "Which product category generated the highest total revenue?",
+  "row_count": 3720,
+  "columns": [
+    "pk_gold_id",
+    "pk_sales_data 2_silver_id",
+    "transaction_id",
+    "transaction_date",
+    "store_id",
+    "product_id",
+    "product_name_x",
+    "category_x",
+    "quantity",
+    "unit_price",
+    "customer_segment",
+    "payment_method",
+    "pk_products 3_silver_id",
+    "product_name_y",
+    "category_y",
+    "standard_price",
+    "total_revenue"
+  ],
+  "narrative": "The strongest result was $7240.59.",
+  "sql": "SELECT * FROM read_parquet('C:/Users/nmuley/Documents/MedellianProjectAccelerateWithAI_081326/data/gold_layer/category_revenue_20260813_154406.parquet') LIMIT 20"
+}

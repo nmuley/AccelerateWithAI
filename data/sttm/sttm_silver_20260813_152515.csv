@@ -1,0 +1,7 @@
+source_schema,source_table,source_column,target_schema,target_table,target_column,transformation_type,transformation_logic
+public,products_bronze_20260813_152515,product_category,public,products_silver,product_category,deduplication,drop_duplicates()
+public,products_bronze_20260813_152515,sales_date,public,products_silver,sales_date,date_format,yyyy-MM-dd
+public,products_bronze_20260813_152515,sales_amount,public,products_silver,sales_amount,null_check,replace_nulls(0)
+public,products_bronze_20260813_152515,product_name,public,products_silver,product_name,text_cleanup,trim(lower())
+public,stores_bronze_20260813_152515,store_name,public,stores_silver,store_name,text_cleanup,trim(lower())
+public,stores_bronze_20260813_152515,store_address,public,stores_silver,store_address,text_cleanup,trim(lower())

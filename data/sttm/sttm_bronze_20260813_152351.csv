@@ -1,0 +1,14 @@
+source_schema,source_table,source_column,target_schema,target_table,target_column,transformation_type,transformation_logic
+public,sales_data 2,transaction_id,public,products 3,id,string,no transformation
+public,sales_data 2,transaction_date,public,products 3,date,date,convert to YYYY-MM-DD format
+public,sales_data 2,store_id,public,products 3,store,string,no transformation
+public,sales_data 2,product_id,public,products 3,product_id,string,no transformation
+public,sales_data 2,product_name,public,products 3,product_name,string,no transformation
+public,sales_data 2,category,public,products 3,category,string,no transformation
+public,sales_data 2,quantity,public,products 3,quantity,integer,no transformation
+public,sales_data 2,unit_price,public,products 3,unit_price,float,no transformation
+public,sales_data 2,total_amount,public,products 3,total_amount,float,no transformation
+public,sales_data 2,customer_segment,public,products 3,customer_segment,string,no transformation
+public,sales_data 2,payment_method,public,products 3,payment_method,string,no transformation
+public,sales_data 2,_load_timestamp,public,products 3,_load_timestamp,timestamp,current_timestamp
+public,sales_data 2,_source_file,public,products 3,_source_file,string,filename

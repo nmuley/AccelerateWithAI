@@ -1,0 +1,2 @@
+source_schema,source_table,source_column,target_schema,target_table,target_column,transformation_type,transformation_logic
+sales,sales,product_id,product,product_category,product_id,inner_join,

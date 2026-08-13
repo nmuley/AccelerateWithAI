@@ -1,0 +1,14 @@
+source_schema,source_table,source_column,target_schema,target_table,target_column,transformation_type,transformation_logic
+landing,products,product_id,bronze,products_bronze,product_id,type_cast,int
+landing,products,product_name,bronze,products_bronze,product_name,type_cast,str
+landing,products,category,bronze,products_bronze,category,type_cast,str
+landing,products,standard_price,bronze,products_bronze,standard_price,type_cast,float
+landing,products,_load_timestamp,bronze,products_bronze,_load_timestamp,metadata_inject,datetime_now_utc
+landing,products,_source_file,bronze,products_bronze,_source_file,metadata_inject,source_path
+landing,stores,store_id,bronze,stores_bronze,store_id,type_cast,int
+landing,stores,store_name,bronze,stores_bronze,store_name,type_cast,str
+landing,stores,region,bronze,stores_bronze,region,type_cast,str
+landing,stores,city,bronze,stores_bronze,city,type_cast,str
+landing,stores,state,bronze,stores_bronze,state,type_cast,str
+landing,stores,_load_timestamp,bronze,stores_bronze,_load_timestamp,metadata_inject,datetime_now_utc
+landing,stores,_source_file,bronze,stores_bronze,_source_file,metadata_inject,source_path

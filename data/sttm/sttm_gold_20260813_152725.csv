@@ -1,0 +1,5 @@
+source_schema,source_table,source_column,target_schema,target_table,target_column,transformation_type,transformation_logic
+public,sales,product_id,public,products,product_id,join,
+public,sales,store_id,public,stores,store_id,join,
+public,sales,sales_revenue,public,sales,sales_revenue,aggregate,SUM
+public,products,product_category,public,products,product_category,group_by,

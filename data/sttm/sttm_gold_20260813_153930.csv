@@ -1,0 +1,5 @@
+source_schema,source_table,source_column,target_schema,target_table,target_column,transformation_type,transformation_logic
+sales,sales_data,sales_amount,product,product_data,product_id,join,sales_data.product_id = product_data.product_id
+sales,sales_data,product_id,product,product_data,product_category,join,sales_data.product_id = product_data.product_id
+product,product_data,product_category,product,product_data,product_category,group_by,product_data.product_category
+sales,sales_data,sales_amount,product,product_data,sales_amount,aggregate,sum(sales_data.sales_amount)

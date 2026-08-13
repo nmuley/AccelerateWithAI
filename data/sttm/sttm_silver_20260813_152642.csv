@@ -1,0 +1,7 @@
+source_schema,source_table,source_column,target_schema,target_table,target_column,transformation_type,transformation_logic
+public,sales_data_bronze,sale_date,public,sales_data_silver,sale_date,Date_Conversion,TO_DATE(sale_date, 'YYYY-MM-DD')
+public,sales_data_bronze,revenue,public,sales_data_silver,revenue,Null_Check,IFNULL(revenue, 0)
+public,products_bronze,product_category,public,products_silver,product_category,Text_Cleansing,TRIM(LOWER(product_category))
+public,products_bronze,product_name,public,products_silver,product_name,Text_Cleansing,TRIM(LOWER(product_name))
+public,sales_data_bronze,product_id,public,sales_data_silver,product_id,Deduplication,ROW_NUMBER() OVER (PARTITION BY product_id ORDER BY sale_date)
+public,stores_bronze,store_name,public,stores_silver,store_name,Text_Cleansing,TRIM(LOWER(store_name))

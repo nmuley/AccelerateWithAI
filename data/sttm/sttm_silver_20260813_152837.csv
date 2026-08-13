@@ -1,0 +1,9 @@
+source_schema,target_schema,source_table,target_table,source_column,target_column,transformation_type,transformation_logic
+sales,sales,sales_data,sales_data,sale_date,sale_date,date,TO_DATE(sale_date, 'YYYY-MM-DD')
+sales,sales,sales_data,sales_data,product_id,product_id,text,TRIM(product_id)
+sales,sales,sales_data,sales_data,store_id,store_id,text,TRIM(store_id)
+sales,sales,sales_data,sales_data,revenue,revenue,numeric,REPLACE(revenue, ',', '')
+products,products,products,products,product_name,product_name,text,UPPER(product_name)
+products,products,products,products,product_category,product_category,text,UPPER(product_category)
+stores,stores,stores,stores,store_name,store_name,text,UPPER(store_name)
+sales,sales,sales_data,sales_data,sale_date,sale_date,date,DATE_TRUNC('day', sale_date)

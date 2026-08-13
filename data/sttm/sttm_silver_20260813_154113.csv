@@ -1,0 +1,5 @@
+source_schema,source_table,source_column,target_schema,target_table,target_column,transformation_type,transformation_logic
+bronze,sales_data 2_bronze_20260813_154113,product_category,silver,sales_data,product_category,cleansing,trim and standardize text
+bronze,sales_data 2_bronze_20260813_154113,date,silver,sales_data,date,cleansing,convert to standard date format
+bronze,sales_data 2_bronze_20260813_154113,revenue,silver,sales_data,revenue,cleansing,replace nulls with 0
+bronze,sales_data 2_bronze_20260813_154113,product_category,silver,sales_data,product_category,deduplication,remove duplicates based on product_category and date

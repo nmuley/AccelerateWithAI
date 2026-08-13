@@ -1,0 +1,4 @@
+source_schema,source_table,source_column,target_schema,target_table,target_column,transformation_type,transformation_logic
+silver,sales_data_silver,product_id,gold,category_revenue,product_id,join,join_left:sales_data_silver:products_silver:product_id
+silver,products_silver,category,gold,category_revenue,category,group_by,group_by_category
+silver,sales_data_silver,total_amount,gold,category_revenue,total_revenue,aggregate,SUM(total_amount) AS total_revenue

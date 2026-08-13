@@ -1,0 +1,14 @@
+source_schema,source_table,source_column,target_schema,target_table,target_column,transformation_type,transformation_logic
+public,sales_data 2,transaction_id,public,products 3,id,copy,
+public,sales_data 2,transaction_date,public,products 3,date,date_format,yyyy-MM-dd
+public,sales_data 2,store_id,public,products 3,store,copy,
+public,sales_data 2,product_id,public,products 3,product_id,copy,
+public,sales_data 2,product_name,public,products 3,product_name,copy,
+public,sales_data 2,category,public,products 3,category,copy,
+public,sales_data 2,quantity,public,products 3,quantity,copy,
+public,sales_data 2,unit_price,public,products 3,unit_price,copy,
+public,sales_data 2,total_amount,public,products 3,total_amount,copy,
+public,sales_data 2,customer_segment,public,products 3,customer_segment,copy,
+public,sales_data 2,payment_method,public,products 3,payment_method,copy,
+,,_load_timestamp,public,products 3,_load_timestamp,metadata_injection,2024-09-16 14:30:00
+,,_source_file,public,products 3,_source_file,metadata_injection,sales_data.csv

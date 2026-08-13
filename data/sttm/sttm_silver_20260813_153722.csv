@@ -1,0 +1,8 @@
+source_schema,target_schema,source_table,target_table,source_column,target_column,transformation_type,transformation_logic
+sales,sales,sales_data,sales_data,sale_date,sale_date,Date,yyyy-MM-dd
+sales,sales,sales_data,sales_data,product_id,product_id,Text,Trim()
+sales,sales,sales_data,sales_data,store_id,store_id,Text,Trim()
+sales,sales,sales_data,sales_data,revenue,revenue,Number,NullIf(0)
+products,products,products,products,product_id,product_id,Text,Trim()
+products,products,products,products,category,category,Text,Upper()
+stores,stores,stores,stores,store_id,store_id,Text,Trim()

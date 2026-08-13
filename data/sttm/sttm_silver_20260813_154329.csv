@@ -1,0 +1,9 @@
+source_schema,source_table,source_column,target_schema,target_table,target_column,transformation_type,transformation_logic
+sales,sales_data,sale_date,sales,sales_data,sale_date,Date,yyyy-MM-dd
+sales,sales_data,product_id,sales,sales_data,product_id,Text,Trim()
+sales,sales_data,store_id,sales,sales_data,store_id,Text,Trim()
+sales,sales_data,revenue,sales,sales_data,revenue,Number,NullIf(revenue = '')
+products,products,product_category,products,products,product_category,Text,Upper()
+products,products,product_name,products,products,product_name,Text,Trim()
+stores,stores,store_name,stores,stores,store_name,Text,Trim()
+sales,sales_data,*,sales,sales_data,*,Deduplication,Remove duplicates based on all columns

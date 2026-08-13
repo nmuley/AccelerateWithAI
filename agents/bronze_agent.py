@@ -44,23 +44,23 @@ def run(input_files: list[str], sttm_path: str, run_id: str) -> list[str]:
                 continue
 
             series = df[source_col]
+            effective_target = target_col or source_col
             if transformation_type in {"type_cast", "passthrough"}:
                 if "datetime" in logic:
-                    df[target_col or source_col] = pd.to_datetime(series, errors="coerce")
+                    df[effective_target] = pd.to_datetime(series, errors="coerce")
                 elif "float" in logic:
-                    df[target_col or source_col] = pd.to_numeric(series, errors="coerce")
+                    df[effective_target] = pd.to_numeric(series, errors="coerce")
                 elif "int" in logic:
-                    df[target_col or source_col] = pd.to_numeric(series, errors="coerce").astype("Int64")
+                    df[effective_target] = pd.to_numeric(series, errors="coerce").astype("Int64")
                 elif "str" in logic:
-                    df[target_col or source_col] = series.astype(str)
+                    df[effective_target] = series.astype(str)
                 else:
-                    df[target_col or source_col] = series
+                    df[effective_target] = series
             else:
-                df[target_col or source_col] = series
+                df[effective_target] = series
 
-            if source_col != target_col and target_col:
-                if source_col in df.columns and target_col in df.columns:
-                    df = df.rename(columns={source_col: target_col})
+            if source_col != effective_target and source_col in df.columns:
+                df = df.drop(columns=[source_col])
 
         if "_load_timestamp" not in df.columns:
             df["_load_timestamp"] = datetime.now(timezone.utc).isoformat()

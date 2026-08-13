@@ -72,7 +72,12 @@ def _validate_and_save(csv_text: str, out_path: Path) -> str:
     if missing:
         raise ValueError(f"Missing required STTM columns: {missing}")
 
-    out_path.write_text(text + "\n", encoding="utf-8")
+    rows = list(reader)
+    stream = io.StringIO()
+    writer = csv.DictWriter(stream, fieldnames=REQUIRED_COLUMNS, quoting=csv.QUOTE_MINIMAL, extrasaction="ignore")
+    writer.writeheader()
+    writer.writerows(rows)
+    out_path.write_text(stream.getvalue(), encoding="utf-8")
     return str(out_path)
 
 
@@ -137,7 +142,7 @@ def _fallback_silver_sttm(bronze_paths: list[str], bronze_sttm_path: str, run_id
     bronze_names = [Path(p).stem for p in bronze_paths]
     rows = []
     for name in bronze_names:
-        base = name.replace("_bronze", "")
+        base = name.split("_bronze_")[0]
         rows.append({
             "source_schema": "bronze",
             "source_table": name,
@@ -189,20 +194,27 @@ def _fallback_silver_sttm(bronze_paths: list[str], bronze_sttm_path: str, run_id
 
 
 def _fallback_gold_sttm(silver_paths: list[str], silver_sttm_path: str, business_intent: str, run_id: str) -> str:
+    def _clean(name: str) -> str:
+        return name.strip().replace("-", "_").replace(" ", "_")
+
+    silver_names = [_clean(Path(p).stem.split("_silver_")[0]) for p in silver_paths]
+    sales_table = next((n for n in silver_names if "sale" in n.lower()), silver_names[0] if silver_names else "sales_data")
+    products_table = next((n for n in silver_names if "product" in n.lower()), silver_names[1] if len(silver_names) > 1 else "products")
+
     rows = [
         {
             "source_schema": "silver",
-            "source_table": "sales_data_silver",
+            "source_table": sales_table,
             "source_column": "product_id",
             "target_schema": "gold",
             "target_table": "category_revenue",
             "target_column": "product_id",
             "transformation_type": "join",
-            "transformation_logic": "join_left:sales_data_silver:products_silver:product_id",
+            "transformation_logic": f"join_left:{sales_table}:{products_table}:product_id",
         },
         {
             "source_schema": "silver",
-            "source_table": "products_silver",
+            "source_table": products_table,
             "source_column": "category",
             "target_schema": "gold",
             "target_table": "category_revenue",
@@ -212,7 +224,7 @@ def _fallback_gold_sttm(silver_paths: list[str], silver_sttm_path: str, business
         },
         {
             "source_schema": "silver",
-            "source_table": "sales_data_silver",
+            "source_table": sales_table,
             "source_column": "total_amount",
             "target_schema": "gold",
             "target_table": "category_revenue",
@@ -244,7 +256,11 @@ def generate_bronze_sttm(profile_path: str, business_intent: str, run_id: str) -
     else:
         csv_text = _extract_csv(text)
         out_path = STTM_DIR / f"sttm_bronze_{run_id}.csv"
-        path = _validate_and_save(csv_text, out_path)
+        try:
+            path = _validate_and_save(csv_text, out_path)
+        except ValueError as exc:
+            print(f"[STTM] bronze LLM response invalid, using fallback: {exc}")
+            path = _fallback_bronze_sttm(profile_path, run_id)
 
     logger = AuditLogger(run_id=run_id)
     logger.log("sttm_generator", "bronze_generated", output_path=path, business_intent=business_intent)
@@ -263,7 +279,11 @@ def generate_silver_sttm(bronze_paths: list[str], bronze_sttm_path: str, busines
         path = _fallback_silver_sttm(bronze_paths, bronze_sttm_path, run_id)
     else:
         out_path = STTM_DIR / f"sttm_silver_{run_id}.csv"
-        path = _validate_and_save(_extract_csv(text), out_path)
+        try:
+            path = _validate_and_save(_extract_csv(text), out_path)
+        except ValueError as exc:
+            print(f"[STTM] silver LLM response invalid, using fallback: {exc}")
+            path = _fallback_silver_sttm(bronze_paths, bronze_sttm_path, run_id)
 
     logger = AuditLogger(run_id=run_id)
     logger.log("sttm_generator", "silver_generated", output_path=path, business_intent=business_intent)
@@ -282,7 +302,11 @@ def generate_gold_sttm(silver_paths: list[str], silver_sttm_path: str, business_
         path = _fallback_gold_sttm(silver_paths, silver_sttm_path, business_intent, run_id)
     else:
         out_path = STTM_DIR / f"sttm_gold_{run_id}.csv"
-        path = _validate_and_save(_extract_csv(text), out_path)
+        try:
+            path = _validate_and_save(_extract_csv(text), out_path)
+        except ValueError as exc:
+            print(f"[STTM] gold LLM response invalid, using fallback: {exc}")
+            path = _fallback_gold_sttm(silver_paths, silver_sttm_path, business_intent, run_id)
 
     logger = AuditLogger(run_id=run_id)
     logger.log("sttm_generator", "gold_generated", output_path=path, business_intent=business_intent)

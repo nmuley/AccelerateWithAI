@@ -1,0 +1,5 @@
+source_schema,source_table,source_column,target_schema,target_table,target_column,transformation_type,transformation_logic
+public,sales_data,product_category,public,cleaned_sales_data,product_category,deduplication,drop_duplicates()
+public,sales_data,revenue,public,cleaned_sales_data,revenue,null_check,fillna(0)
+public,sales_data,date,public,cleaned_sales_data,date,date_format,pd.to_datetime()
+public,sales_data,product_name,public,cleaned_sales_data,product_name,text_cleanse,str.strip().str.lower()

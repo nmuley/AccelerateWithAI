@@ -1,0 +1,6 @@
+source_schema,source_table,source_column,target_schema,target_table,target_column,transformation_type,transformation_logic
+bronze,sales_data 2_bronze_20260813_151917,product_category,silver,sales_data,product_category,deduplication,drop_duplicates()
+bronze,sales_data 2_bronze_20260813_151917,revenue,silver,sales_data,revenue,aggregation,sum()
+bronze,sales_data 2_bronze_20260813_151917,date_column,silver,sales_data,date_column,date_conversion,pd.to_datetime()
+bronze,sales_data 2_bronze_20260813_151917,text_column,silver,sales_data,text_column,text_cleanup,str.strip()
+bronze,sales_data 2_bronze_20260813_151917,null_column,silver,sales_data,null_column,null_replacement,fillna(0)

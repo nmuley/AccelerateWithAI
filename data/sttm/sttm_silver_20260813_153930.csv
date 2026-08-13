@@ -1,0 +1,5 @@
+source_schema,source_table,source_column,target_schema,target_table,target_column,transformation_type,transformation_logic
+bronze,sales_data_bronze_20260813_153930,transaction_date,silver,sales_data_silver,transaction_date,date,date_standardise_yyyy_mm_dd
+bronze,sales_data_bronze_20260813_153930,category,silver,sales_data_silver,category,text,title_case
+bronze,sales_data_bronze_20260813_153930,product_name,silver,sales_data_silver,product_name,text,strip
+bronze,sales_data_bronze_20260813_153930,*,silver,sales_data_silver,*,deduplicate,deduplicate

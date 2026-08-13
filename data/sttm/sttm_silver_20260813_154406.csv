@@ -1,0 +1,13 @@
+source_schema,source_table,source_column,target_schema,target_table,target_column,transformation_type,transformation_logic
+bronze,sales_data 2_bronze_20260813_154406,transaction_date,silver,sales_data 2_silver,transaction_date,date,date_standardise_yyyy_mm_dd
+bronze,sales_data 2_bronze_20260813_154406,category,silver,sales_data 2_silver,category,text,title_case
+bronze,sales_data 2_bronze_20260813_154406,product_name,silver,sales_data 2_silver,product_name,text,strip
+bronze,sales_data 2_bronze_20260813_154406,*,silver,sales_data 2_silver,*,deduplicate,deduplicate
+bronze,products 3_bronze_20260813_154406,transaction_date,silver,products 3_silver,transaction_date,date,date_standardise_yyyy_mm_dd
+bronze,products 3_bronze_20260813_154406,category,silver,products 3_silver,category,text,title_case
+bronze,products 3_bronze_20260813_154406,product_name,silver,products 3_silver,product_name,text,strip
+bronze,products 3_bronze_20260813_154406,*,silver,products 3_silver,*,deduplicate,deduplicate
+bronze,stores 3_bronze_20260813_154406,transaction_date,silver,stores 3_silver,transaction_date,date,date_standardise_yyyy_mm_dd
+bronze,stores 3_bronze_20260813_154406,category,silver,stores 3_silver,category,text,title_case
+bronze,stores 3_bronze_20260813_154406,product_name,silver,stores 3_silver,product_name,text,strip
+bronze,stores 3_bronze_20260813_154406,*,silver,stores 3_silver,*,deduplicate,deduplicate

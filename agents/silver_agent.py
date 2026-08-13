@@ -63,7 +63,7 @@ def run(bronze_paths: list[str], sttm_path: str, run_id: str) -> list[str]:
         bronze_df = pd.read_parquet(fp)
         path = Path(fp)
         stem = path.stem
-        table_base = stem.replace("_bronze", "")
+        table_base = stem.split("_bronze_")[0]
         table_rules = [
             row for row in rules
             if str(row.get("source_table", "")).strip() == stem or str(row.get("source_table", "")).strip() == table_base

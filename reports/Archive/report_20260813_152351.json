@@ -1,0 +1,12 @@
+{
+  "run_id": "20260813_152351",
+  "business_intent": "Which product category generated the highest total revenue?",
+  "row_count": 21,
+  "columns": [
+    "pk_gold_id",
+    "category",
+    "total_revenue"
+  ],
+  "narrative": "Electronics led the period with $126742.07 in revenue.",
+  "sql": "SELECT * FROM read_parquet('C:/Users/nmuley/Documents/MedellianProjectAccelerateWithAI_081326/data/gold_layer/products_20260813_152351.parquet') LIMIT 20"
+}

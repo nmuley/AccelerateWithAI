@@ -19,7 +19,7 @@ def run(silver_paths: list[str], sttm_path: str, business_intent: str, run_id: s
     rules = _read_sttm(sttm_path)
     table_map = {}
     for fp in silver_paths:
-        table_name = Path(fp).stem.replace("_silver", "")
+        table_name = Path(fp).stem.split("_silver_")[0]
         table_map[_clean_name(table_name)] = pd.read_parquet(fp)
 
     group_by_map = {}
@@ -79,12 +79,20 @@ def run(silver_paths: list[str], sttm_path: str, business_intent: str, run_id: s
             target_col = str(row.get("target_column", "")).strip() or "value"
             if "SUM(" in logic:
                 expr = logic.split("SUM(", 1)[1].split(")", 1)[0].strip()
-                df = df.groupby([col for col in df.columns if col in [c for c in df.columns] and col != expr], dropna=False).agg({expr: "sum"}).reset_index()
+                if expr not in df.columns:
+                    print(f"[Gold] aggregate column '{expr}' not found, skipping SUM rule")
+                    continue
+                group_cols = [col for col in df.columns if col != expr]
+                df = df.groupby(group_cols, dropna=False).agg({expr: "sum"}).reset_index()
                 df = df.rename(columns={expr: target_col})
                 aggregate_cols.append(target_col)
             elif "AVG(" in logic:
                 expr = logic.split("AVG(", 1)[1].split(")", 1)[0].strip()
-                df = df.groupby([col for col in df.columns if col in [c for c in df.columns] and col != expr], dropna=False).agg({expr: "mean"}).reset_index()
+                if expr not in df.columns:
+                    print(f"[Gold] aggregate column '{expr}' not found, skipping AVG rule")
+                    continue
+                group_cols = [col for col in df.columns if col != expr]
+                df = df.groupby(group_cols, dropna=False).agg({expr: "mean"}).reset_index()
                 df = df.rename(columns={expr: target_col})
                 aggregate_cols.append(target_col)
 

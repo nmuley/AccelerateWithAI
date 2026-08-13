@@ -1,0 +1,15 @@
+.env
+
+# Virtual environment
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Generated pipeline outputs
+data/
+reports/
+audit_logs/

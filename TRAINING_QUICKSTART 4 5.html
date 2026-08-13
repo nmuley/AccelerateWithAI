@@ -1,0 +1,1496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IDAMP — Trainee Quick-Start Guide</title>
+<style>
+  :root {
+    --blue:    #1e40af;
+    --blue-lt: #dbeafe;
+    --green:   #166534;
+    --green-lt:#dcfce7;
+    --orange:  #92400e;
+    --orange-lt:#fef3c7;
+    --purple:  #5b21b6;
+    --purple-lt:#ede9fe;
+    --red:     #991b1b;
+    --red-lt:  #fee2e2;
+    --gray:    #374151;
+    --gray-lt: #f9fafb;
+    --border:  #e5e7eb;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; scroll-padding-top: 60px; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #f3f4f6;
+    color: var(--gray);
+    line-height: 1.6;
+  }
+
+  /* ── STICKY TOP NAV + PROGRESS ── */
+  .topnav { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,0.97);
+            backdrop-filter: blur(6px); border-bottom: 1px solid var(--border); }
+  .progress-track { height: 3px; background: #e5e7eb; }
+  .progress-bar { height: 3px; width: 0%; background: linear-gradient(90deg, var(--blue), #22c55e); transition: width 0.08s; }
+  .topnav-inner { max-width: 1120px; margin: 0 auto; display: flex; align-items: center;
+                  gap: 4px; padding: 7px 16px; flex-wrap: wrap; }
+  .topnav .brand { font-weight: 700; font-size: 0.85rem; color: var(--blue); margin-right: auto; white-space: nowrap; }
+  .topnav a { font-size: 0.74rem; color: #6b7280; text-decoration: none; padding: 4px 8px;
+              border-radius: 6px; white-space: nowrap; }
+  .topnav a:hover { background: #f1f5f9; color: var(--blue); }
+  .topnav a.active { background: var(--blue-lt); color: var(--blue); font-weight: 600; }
+  .nav-btn { font-size: 0.7rem; font-weight: 600; padding: 4px 9px; border: 1px solid var(--border);
+             border-radius: 6px; background: white; cursor: pointer; color: #6b7280; }
+  .nav-btn:hover { background: #f1f5f9; color: var(--blue); }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 60%, #2563eb 100%);
+    color: white;
+    padding: 48px 40px 40px;
+    text-align: center;
+  }
+  .hero h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 8px; }
+  .hero p  { font-size: 1rem; opacity: 0.9; max-width: 680px; margin: 0 auto 24px; }
+
+  .badge-row { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+  .badge {
+    padding: 4px 12px; border-radius: 20px; font-size: 0.78rem; font-weight: 600;
+    background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.35);
+  }
+
+  /* ── OVERVIEW STRIP ── */
+  .overview {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 0; background: #1e3a8a; border-top: 1px solid rgba(255,255,255,0.15);
+  }
+  .ov-item {
+    padding: 18px 16px; text-align: center; border-right: 1px solid rgba(255,255,255,0.12);
+    color: white;
+  }
+  .ov-item:last-child { border-right: none; }
+  .ov-num  { font-size: 1.8rem; font-weight: 700; }
+  .ov-label{ font-size: 0.72rem; opacity: 0.75; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+  /* ── FLOW DIAGRAM ── */
+  .flow-section { background: white; border-bottom: 1px solid var(--border); padding: 28px 40px; }
+  .flow-section h2 { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #6b7280; margin-bottom: 16px; }
+  .flow { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+  .flow-node {
+    padding: 8px 14px; border-radius: 8px; font-size: 0.82rem; font-weight: 600;
+    white-space: nowrap;
+  }
+  .fn-input  { background: #f3f4f6; border: 2px solid #d1d5db; color: #374151; }
+  .fn-infra  { background: var(--purple-lt); border: 2px solid #a78bfa; color: var(--purple); }
+  .fn-llm    { background: #fff7ed; border: 2px dashed #fb923c; color: #9a3412; }
+  .fn-bronze { background: #fef3c7; border: 2px solid #f59e0b; color: #78350f; }
+  .fn-silver { background: #f1f5f9; border: 2px solid #94a3b8; color: #334155; }
+  .fn-gold   { background: #fefce8; border: 2px solid #eab308; color: #713f12; }
+  .fn-report { background: var(--green-lt); border: 2px solid #4ade80; color: var(--green); }
+  .fn-gate   { background: #ede9fe; border: 2px solid #8b5cf6; color: #5b21b6; }
+  .flow-arrow { font-size: 1.1rem; color: #9ca3af; }
+  .flow-legend { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 14px; font-size: 0.74rem; color: #6b7280; }
+  .flow-legend span { display: inline-flex; align-items: center; gap: 5px; }
+  .lg-dot { width: 11px; height: 11px; border-radius: 3px; display: inline-block; }
+
+  /* ── MAIN LAYOUT ── */
+  .container { max-width: 960px; margin: 0 auto; padding: 20px 24px 60px; }
+
+  /* ── SECTION BANDS (prereqs / build-with-ai / troubleshooting) ── */
+  .section-band { max-width: 960px; margin: 0 auto; padding: 26px 24px 0; }
+  .section-title { font-size: 1.35rem; font-weight: 700; color: var(--gray); margin: 6px 0 4px;
+                   display: flex; align-items: center; gap: 10px; }
+  .section-desc { font-size: 0.92rem; color: #6b7280; margin-bottom: 4px; }
+
+  /* ── STEP CARD ── */
+  .step-card {
+    background: white; border-radius: 12px; border: 1px solid var(--border);
+    margin-bottom: 24px; overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+
+  .step-header {
+    display: flex; align-items: center; gap: 16px;
+    padding: 20px 24px; border-bottom: 1px solid var(--border);
+    cursor: pointer; user-select: none;
+  }
+  .step-num {
+    width: 42px; height: 42px; border-radius: 50%; display: flex;
+    align-items: center; justify-content: center;
+    font-size: 1rem; font-weight: 700; flex-shrink: 0; color: white;
+  }
+  .step-title { font-size: 1.1rem; font-weight: 700; }
+  .step-sub   { font-size: 0.82rem; color: #6b7280; margin-top: 2px; }
+  .step-tag   {
+    margin-left: auto; font-size: 0.72rem; font-weight: 700;
+    padding: 3px 10px; border-radius: 20px; white-space: nowrap; flex-shrink: 0;
+  }
+  .step-chevron { font-size: 0.85rem; color: #9ca3af; flex-shrink: 0; transition: transform 0.2s; }
+  .step-card.collapsed .step-chevron { transform: rotate(-90deg); }
+  .step-card.collapsed .step-body { display: none; }
+
+  .step-body { padding: 24px; }
+
+  /* color themes per step */
+  .theme-setup    .step-num { background: #7c3aed; }
+  .theme-setup    .step-tag { background: var(--purple-lt); color: var(--purple); }
+  .theme-infra    .step-num { background: #1d4ed8; }
+  .theme-infra    .step-tag { background: var(--blue-lt); color: var(--blue); }
+  .theme-bronze   .step-num { background: #d97706; }
+  .theme-bronze   .step-tag { background: #fef3c7; color: #78350f; }
+  .theme-silver   .step-num { background: #475569; }
+  .theme-silver   .step-tag { background: #f1f5f9; color: #334155; }
+  .theme-gold     .step-num { background: #ca8a04; }
+  .theme-gold     .step-tag { background: #fefce8; color: #713f12; }
+  .theme-report   .step-num { background: #16a34a; }
+  .theme-report   .step-tag { background: var(--green-lt); color: var(--green); }
+  .theme-cli      .step-num { background: #0891b2; }
+  .theme-cli      .step-tag { background: #cffafe; color: #155e75; }
+  .theme-run      .step-num { background: #dc2626; }
+  .theme-run      .step-tag { background: var(--red-lt); color: var(--red); }
+
+  /* ── INNER ELEMENTS ── */
+  h3 { font-size: 0.85rem; font-weight: 700; text-transform: uppercase;
+       letter-spacing: 0.6px; color: #6b7280; margin: 20px 0 8px; }
+  h3:first-child { margin-top: 0; }
+
+  p { font-size: 0.9rem; color: #4b5563; margin-bottom: 10px; }
+  p:last-child { margin-bottom: 0; }
+
+  ul, ol { padding-left: 20px; margin-bottom: 10px; }
+  li { font-size: 0.88rem; color: #4b5563; margin-bottom: 4px; }
+
+  /* code blocks */
+  pre {
+    background: #0f172a; color: #e2e8f0; border-radius: 8px;
+    padding: 16px 18px; font-size: 0.8rem; overflow-x: auto;
+    line-height: 1.55; margin: 10px 0;
+  }
+  code {
+    font-family: "SF Mono", "Fira Mono", "Consolas", monospace;
+  }
+  .inline-code {
+    background: #f1f5f9; color: #0f172a; padding: 1px 6px;
+    border-radius: 4px; font-size: 0.82rem; font-family: "SF Mono", monospace;
+  }
+
+  /* comment color in code */
+  .cm { color: #94a3b8; }
+  .kw { color: #93c5fd; }
+  .st { color: #86efac; }
+  .fn { color: #fde68a; }
+
+  /* prompt boxes */
+  .prompt-box {
+    border-radius: 8px; padding: 14px 16px; margin: 12px 0;
+    border-left: 4px solid;
+  }
+  .prompt-box.ai   { background: #fef9c3; border-color: #fbbf24; }
+  .prompt-box.note { background: #eff6ff; border-color: #3b82f6; }
+  .prompt-box.warn { background: #fff7ed; border-color: #f97316; }
+  .prompt-box.tip  { background: #f0fdf4; border-color: #22c55e; }
+
+  .prompt-label {
+    font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.6px; margin-bottom: 6px;
+  }
+  .ai   .prompt-label { color: #92400e; }
+  .note .prompt-label { color: #1d4ed8; }
+  .warn .prompt-label { color: #c2410c; }
+  .tip  .prompt-label { color: #15803d; }
+
+  .prompt-box p { font-size: 0.87rem; margin: 0; }
+  .prompt-box pre { font-size: 0.8rem; margin: 8px 0 0; }
+
+  /* file tree */
+  .file-tree {
+    background: #f8fafc; border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px 16px; font-family: "SF Mono", monospace; font-size: 0.8rem;
+    line-height: 1.7; color: #374151;
+  }
+  .file-tree .dir  { color: #1d4ed8; font-weight: 600; }
+  .file-tree .new  { color: #16a34a; font-weight: 600; }
+  .file-tree .note { color: #9ca3af; }
+
+  /* two-col */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 10px 0; }
+  @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+
+  /* checklist */
+  .checklist { list-style: none; padding: 0; }
+  .checklist li {
+    display: flex; align-items: flex-start; gap: 8px;
+    padding: 6px 0; border-bottom: 1px solid var(--border);
+    font-size: 0.88rem;
+  }
+  .checklist li:last-child { border-bottom: none; }
+  .check-icon { color: #22c55e; font-size: 0.9rem; flex-shrink: 0; margin-top: 2px; }
+  .check-icon.warn { color: #f59e0b; }
+
+  /* numbered AI-workflow list */
+  .ai-flow { counter-reset: aiflow; list-style: none; padding: 0; margin: 6px 0; }
+  .ai-flow li { position: relative; padding: 9px 0 9px 42px; font-size: 0.9rem;
+                border-bottom: 1px solid var(--border); color: #4b5563; }
+  .ai-flow li:last-child { border-bottom: none; }
+  .ai-flow li::before {
+    counter-increment: aiflow; content: counter(aiflow); position: absolute; left: 0; top: 8px;
+    width: 27px; height: 27px; background: var(--purple-lt); color: var(--purple);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 0.8rem;
+  }
+
+  /* separator */
+  hr { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+  /* table */
+  table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin: 10px 0; }
+  th { background: #f1f5f9; font-weight: 700; padding: 8px 10px; text-align: left;
+       border-bottom: 2px solid var(--border); color: #374151; }
+  td { padding: 7px 10px; border-bottom: 1px solid var(--border); color: #4b5563; }
+  tr:last-child td { border-bottom: none; }
+
+  /* back to top */
+  #toTop { position: fixed; bottom: 24px; right: 24px; z-index: 60; width: 44px; height: 44px;
+           border-radius: 50%; background: var(--blue); color: white; border: none; font-size: 1.3rem;
+           cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.25); opacity: 0; pointer-events: none;
+           transition: opacity 0.2s; }
+  #toTop.show { opacity: 0.92; pointer-events: auto; }
+
+  /* footer */
+  .footer { text-align: center; padding: 30px 20px; font-size: 0.78rem; color: #9ca3af; }
+
+  /* ── PRINT ── */
+  @media print {
+    .topnav, #toTop { display: none !important; }
+    .step-card.collapsed .step-body { display: block !important; }
+    .step-card { break-inside: avoid; box-shadow: none; }
+    .hero { padding: 24px; }
+    pre { white-space: pre-wrap; word-break: break-word; }
+    body { background: white; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ───────────────── STICKY NAV ───────────────── -->
+<div class="topnav">
+  <div class="progress-track"><div class="progress-bar" id="progress"></div></div>
+  <div class="topnav-inner">
+    <span class="brand">IDAMP · Quick-Start</span>
+    <a href="#prereq">Prerequisites</a>
+    <a href="#buildai">Build with AI</a>
+    <a href="#step1">Setup</a>
+    <a href="#step3">Agents</a>
+    <a href="#step9">Orchestrator</a>
+    <a href="#step10">Run</a>
+    <a href="#trouble">Troubleshooting</a>
+    <a href="#reference">Reference</a>
+    <button class="nav-btn" id="expandAll">Expand all</button>
+    <button class="nav-btn" id="collapseAll">Collapse all</button>
+  </div>
+</div>
+
+<!-- ───────────────── HERO ───────────────── -->
+<div class="hero">
+  <h1>Intent-Driven Agentic Medallion Pipeline</h1>
+  <p>A hands-on quick-start guide for trainees — build the full multi-agent pipeline from scratch on your own laptop, using only the raw CSV files, an AI coding assistant, and these step-by-step instructions.</p>
+  <div class="badge-row">
+    <span class="badge">Python 3.10+</span>
+    <span class="badge">GitHub Models · gpt-4.1-mini (free)</span>
+    <span class="badge">LangChain · DuckDB · Parquet</span>
+    <span class="badge">Bronze → Silver → Gold</span>
+    <span class="badge">4 LLM calls total</span>
+    <span class="badge">3 HITL gates</span>
+  </div>
+</div>
+
+<!-- ───────────────── OVERVIEW NUMBERS ───────────────── -->
+<div class="overview">
+  <div class="ov-item"><div class="ov-num">10</div><div class="ov-label">Build steps</div></div>
+  <div class="ov-item"><div class="ov-num">3</div><div class="ov-label">Raw CSV files</div></div>
+  <div class="ov-item"><div class="ov-num">4</div><div class="ov-label">LLM calls</div></div>
+  <div class="ov-item"><div class="ov-num">3</div><div class="ov-label">Medallion layers</div></div>
+  <div class="ov-item"><div class="ov-num">1</div><div class="ov-label">HTML report output</div></div>
+  <div class="ov-item"><div class="ov-num">~2 hrs</div><div class="ov-label">Estimated time</div></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     PREREQUISITES
+═══════════════════════════════════════════════════════ -->
+<div class="section-band" id="prereq" data-nav>
+  <div class="section-title">🧰 Before you begin — prerequisites</div>
+  <div class="section-desc">Get these four things ready first. Total setup time: ~10 minutes.</div>
+</div>
+<div class="container" style="padding-top:14px; padding-bottom:0;">
+<div class="step-card theme-setup">
+  <div class="step-header">
+    <div class="step-num">✓</div>
+    <div>
+      <div class="step-title">Laptop, Python, an AI assistant &amp; a free GitHub token</div>
+      <div class="step-sub">Everything here is free — no paid API keys or corporate access required</div>
+    </div>
+    <span class="step-tag">⏱ ~10 min</span>
+    <span class="step-chevron">▼</span>
+  </div>
+  <div class="step-body">
+
+    <h3>1 · A laptop &amp; Python 3.10+</h3>
+    <p>Windows, macOS, or Linux with 8&nbsp;GB+ RAM. Check your Python version:</p>
+    <pre><code>python --version      <span class="cm"># must be 3.10 or higher</span>
+<span class="cm"># If missing or too old, install from https://www.python.org/downloads/</span>
+<span class="cm"># On Windows, tick "Add python.exe to PATH" in the installer.</span></code></pre>
+
+    <h3>2 · An AI coding assistant (this is how you build it)</h3>
+    <p>You will not hand-type the code — you will drive an AI assistant with the prompts in each step. <strong>Claude Code</strong> is recommended (terminal CLI or the VS&nbsp;Code / JetBrains extension). Any capable AI coding assistant works. See the next section for the workflow.</p>
+
+    <h3>3 · A free GitHub Personal Access Token (PAT)</h3>
+    <p>This gives you free access to <strong>GitHub Models — gpt-4.1-mini</strong>. No credit card, no cost.</p>
+    <ol>
+      <li>Go to <span class="inline-code">https://github.com/settings/tokens</span></li>
+      <li>Click <strong>Generate new token → classic</strong></li>
+      <li>You do <strong>not</strong> need to select any scopes/permissions</li>
+      <li>Generate, then copy the token (starts with <span class="inline-code">ghp_…</span>) — you will paste it into <span class="inline-code">.env</span> in Step&nbsp;1</li>
+    </ol>
+
+    <h3>4 · Quick sanity check</h3>
+    <pre><code>python -m pip --version        <span class="cm"># pip is available</span>
+python -c "import sys; print(sys.executable)"   <span class="cm"># confirms which Python</span></code></pre>
+
+    <div class="prompt-box tip">
+      <div class="prompt-label">Why GitHub Models?</div>
+      <p>It is an OpenAI-compatible endpoint (<span class="inline-code">https://models.github.ai/inference</span>) that every trainee can use for free with a GitHub account. The same code works with Groq, Anthropic, or Gemini later by swapping the provider — but for this session, everyone uses <span class="inline-code">gpt-4.1-mini</span> so you all see the same behaviour.</p>
+    </div>
+
+    <ul class="checklist">
+      <li><span class="check-icon">✓</span> <span class="inline-code">python --version</span> shows 3.10+</li>
+      <li><span class="check-icon">✓</span> An AI coding assistant is installed and open</li>
+      <li><span class="check-icon">✓</span> You have copied a GitHub PAT (<span class="inline-code">ghp_…</span>)</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     HOW TO BUILD THIS WITH AI
+═══════════════════════════════════════════════════════ -->
+<div class="section-band" id="buildai" data-nav>
+  <div class="section-title">🤖 How to build this with AI</div>
+  <div class="section-desc">Each step gives you an <strong>AI Coding Prompt</strong> — a contract describing what a file must do. You paste it into your assistant; it writes the code. You review, run, and iterate.</div>
+</div>
+<div class="container" style="padding-top:14px; padding-bottom:0;">
+<div class="step-card theme-infra">
+  <div class="step-header">
+    <div class="step-num">★</div>
+    <div>
+      <div class="step-title">The build loop — paste, review, run, iterate</div>
+      <div class="step-sub">Prompt engineering + a human-in-the-loop review at every file</div>
+    </div>
+    <span class="step-tag">Read once</span>
+    <span class="step-chevron">▼</span>
+  </div>
+  <div class="step-body">
+
+    <p>The prompts are deliberately <strong>provider-agnostic contracts</strong>: they describe <em>what</em> each file must do, and your AI assistant writes <em>how</em>. This is the same discipline the pipeline itself uses — the LLM writes the rules, deterministic Python does the work.</p>
+
+    <h3>Recommended workflow with Claude Code</h3>
+    <ol class="ai-flow">
+      <li>Open your project folder in Claude Code — run <span class="inline-code">claude</span> in a terminal at the project root, or use the VS&nbsp;Code / JetBrains extension.</li>
+      <li>Paste the step's <strong>AI Coding Prompt</strong> as your message.</li>
+      <li>Review the plan. In Plan Mode, Claude Code proposes which files it will create or change — read it before approving.</li>
+      <li>Approve the edits. It shows each change and asks permission — nothing is written or run without your OK.</li>
+      <li>Run the step's <strong>Quick test / Checkpoint</strong> to confirm the file actually works.</li>
+      <li>Iterate on errors — paste any error message back and ask it to fix; repeat until the checkpoint is green.</li>
+      <li>Only then move to the next step. Build in order — every agent imports from <span class="inline-code">core/</span>.</li>
+    </ol>
+
+    <div class="prompt-box tip">
+      <div class="prompt-label">Tips that make this go smoothly</div>
+      <ul style="margin:6px 0 0">
+        <li>Keep <span class="inline-code">.env</span> out of version control (add it to <span class="inline-code">.gitignore</span>) — never share your token.</li>
+        <li>Ask the assistant to <strong>explain</strong> any code you don't understand — you are learning, not just generating.</li>
+        <li>If it over-engineers, say "keep it minimal and match the prompt exactly."</li>
+        <li>Commit (or copy) after each step that passes its checkpoint, so you can always roll back.</li>
+      </ul>
+    </div>
+
+    <div class="prompt-box note">
+      <div class="prompt-label">Concepts you are practising</div>
+      <p><strong>Prompt engineering</strong> (the contracts below), <strong>context engineering</strong> (feeding the model schemas &amp; profiles, not raw rows), <strong>loop engineering</strong> (the HITL approve/iterate cycle), and <strong>harness engineering</strong> (the tools, state, and audit trail around the model).</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ───────────────── ARCHITECTURE FLOW ───────────────── -->
+<div class="flow-section">
+  <h2>End-to-End Data Flow</h2>
+  <div class="flow">
+    <div class="flow-node fn-input">📄 Raw CSVs</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node fn-infra">⚙️ Core (config · state · audit)</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node fn-bronze">🔶 Profiler <small>(Python)</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node fn-llm">🧠 Bronze STTM <small>(LLM 1)</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node fn-gate">✋ Gate</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node fn-bronze">🔶 Bronze <small>(Python)</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node fn-llm">🧠 Silver STTM <small>(LLM 2)</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node fn-gate">✋ Gate</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node fn-silver">⬜ Silver <small>(Python)</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node fn-llm">🧠 Gold STTM <small>(LLM 3)</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node fn-gate">✋ Gate</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node fn-gold">🥇 Gold <small>(Python)</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node fn-report">📊 Reporter <small>(LLM 4)</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node fn-report">✅ HTML Report</div>
+  </div>
+  <div class="flow-legend">
+    <span><span class="lg-dot" style="background:#fb923c"></span> LLM call (4 total: 3 STTM + 1 Reporter)</span>
+    <span><span class="lg-dot" style="background:#8b5cf6"></span> Human-in-the-loop approval gate</span>
+    <span><span class="lg-dot" style="background:#94a3b8"></span> Deterministic Python — no LLM</span>
+  </div>
+</div>
+
+<!-- ───────────────── MAIN CONTENT ───────────────── -->
+<div class="container">
+
+<!-- ════════════════════════════════════════════════════
+     STEP 1 — Project Setup
+════════════════════════════════════════════════════ -->
+<div class="step-card theme-setup" id="step1" data-nav>
+  <div class="step-header">
+    <div class="step-num">1</div>
+    <div>
+      <div class="step-title">Project Setup &amp; Environment</div>
+      <div class="step-sub">Create the folder skeleton, install dependencies, configure your GitHub token</div>
+    </div>
+    <span class="step-tag">🛠 Setup · ~10 min</span>
+    <span class="step-chevron">▼</span>
+  </div>
+  <div class="step-body">
+
+    <h3>What you start with</h3>
+    <p>You have three raw data files. Put them in <span class="inline-code">data/landing/</span> — nothing else needs to exist yet.</p>
+    <div class="file-tree">
+      <span class="dir">data/landing/</span><br>
+      &nbsp;&nbsp;sales_data.csv &nbsp;&nbsp;<span class="note">← ~186 rows, intentionally dirty (mixed dates, abbreviations)</span><br>
+      &nbsp;&nbsp;products.csv &nbsp;&nbsp;&nbsp;&nbsp;<span class="note">← 20 rows, clean catalog</span><br>
+      &nbsp;&nbsp;stores.csv &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="note">← 10 rows, clean locations</span>
+    </div>
+
+    <h3>Create the directory structure</h3>
+    <p>Run these from the project root (Git Bash / macOS / Linux):</p>
+    <pre><code>mkdir -p core agents data/landing data/profiles data/sttm \
+         data/bronze_layer data/silver_layer data/gold_layer \
+         data/traces reports audit_logs</code></pre>
+    <p style="font-size:0.82rem;color:#9ca3af">On Windows PowerShell, create the same folders (or just ask your AI assistant to create the structure for you).</p>
+
+    <h3>Create requirements.txt</h3>
+    <pre><code>langchain
+langgraph>=0.2.0
+langchain-openai>=0.2.0
+pandas>=2.2.0
+pyarrow>=17.0.0
+duckdb>=0.9.0
+plotly>=5.17.0
+python-dotenv>=1.0.0
+tabulate>=0.9.0</code></pre>
+
+    <pre><code>pip install -r requirements.txt</code></pre>
+
+    <h3>Configure your LLM credentials — GitHub Models</h3>
+    <p>Create a <span class="inline-code">.env</span> file in the project root and paste <strong>your</strong> token:</p>
+    <pre><code>LLM_PROVIDER=github
+GITHUB_TOKEN=ghp_your_token_here
+GITHUB_MODEL=gpt-4.1-mini</code></pre>
+    <p>The pipeline auto-connects to <span class="inline-code">https://models.github.ai/inference</span>. The endpoint requires a publisher-prefixed model id, so the code normalises <span class="inline-code">gpt-4.1-mini</span> → <span class="inline-code">openai/gpt-4.1-mini</span> for you (see Step&nbsp;2).</p>
+
+    <div class="prompt-box warn">
+      <div class="prompt-label">Important</div>
+      <p>Add <span class="inline-code">.env</span> to your <span class="inline-code">.gitignore</span> — never commit API keys or tokens.</p>
+    </div>
+
+    <h3>Verify the token works (1 quick LLM call)</h3>
+    <pre><code>python -c "import os; from dotenv import load_dotenv; from langchain_openai import ChatOpenAI; \
+load_dotenv(); \
+m = ChatOpenAI(api_key=os.getenv('GITHUB_TOKEN'), \
+               base_url='https://models.github.ai/inference', \
+               model='openai/gpt-4.1-mini'); \
+print(m.invoke('Say OK').content)"</code></pre>
+    <p>Expected output: <span class="inline-code">OK</span></p>
+
+    <h3>Checkpoint</h3>
+    <ul class="checklist">
+      <li><span class="check-icon">✓</span> All <span class="inline-code">data/</span>, <span class="inline-code">reports/</span> and <span class="inline-code">audit_logs/</span> directories exist</li>
+      <li><span class="check-icon">✓</span> The three CSVs are in <span class="inline-code">data/landing/</span></li>
+      <li><span class="check-icon">✓</span> <span class="inline-code">pip install -r requirements.txt</span> succeeds</li>
+      <li><span class="check-icon">✓</span> The verify command prints <span class="inline-code">OK</span> (your token is live)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     STEP 2 — Core Infrastructure
+════════════════════════════════════════════════════ -->
+<div class="step-card theme-infra" id="step2">
+  <div class="step-header">
+    <div class="step-num">2</div>
+    <div>
+      <div class="step-title">Core Infrastructure — config · state · audit</div>
+      <div class="step-sub">Three small files that every agent imports; build these first</div>
+    </div>
+    <span class="step-tag">🏗 Infrastructure · ~15 min</span>
+    <span class="step-chevron">▼</span>
+  </div>
+  <div class="step-body">
+
+    <h3>Why build this first?</h3>
+    <p>Every agent imports from <span class="inline-code">core/</span>. Getting these right upfront means agents can be built and tested independently without import errors. Add an empty <span class="inline-code">core/__init__.py</span> and <span class="inline-code">agents/__init__.py</span> so Python treats them as packages.</p>
+
+    <h3>File 1 — core/config.py</h3>
+    <p>Central configuration: the GitHub Models connection, all output <span class="inline-code">Path</span> constants, and <span class="inline-code">ensure_dirs()</span>.</p>
+
+    <div class="prompt-box ai">
+      <div class="prompt-label">AI Coding Prompt</div>
+      <pre><code>"""
+Create core/config.py. Requirements:
+1. Load .env with python-dotenv (call load_dotenv() at import time)
+2. BASE_DIR = Path(__file__).parent.parent  (project root)
+3. Path constants:
+   LANDING_DIR   = BASE_DIR/"data"/"landing"
+   PROFILES_DIR  = BASE_DIR/"data"/"profiles"
+   STTM_DIR      = BASE_DIR/"data"/"sttm"
+   BRONZE_DIR    = BASE_DIR/"data"/"bronze_layer"
+   SILVER_DIR    = BASE_DIR/"data"/"silver_layer"
+   GOLD_DIR      = BASE_DIR/"data"/"gold_layer"
+   TRACES_DIR    = BASE_DIR/"data"/"traces"
+   REPORTS_DIR   = BASE_DIR/"reports"
+   AUDIT_DIR     = BASE_DIR/"audit_logs"
+4. GitHub Models configuration (OpenAI-compatible, free with a GitHub PAT):
+   GITHUB_TOKEN    = os.getenv("GITHUB_TOKEN")
+   GITHUB_BASE_URL = os.getenv("GITHUB_BASE_URL", "https://models.github.ai/inference")
+   GITHUB_MODEL    = os.getenv("GITHUB_MODEL", "gpt-4.1-mini")
+   if "/" not in GITHUB_MODEL:
+       GITHUB_MODEL = f"openai/{GITHUB_MODEL}"   # endpoint needs a publisher prefix
+   LLM_PROVIDER    = os.getenv("LLM_PROVIDER", "github").strip().lower()
+5. ensure_dirs() creates every directory above with parents=True, exist_ok=True
+"""</code></pre>
+    </div>
+
+    <h3>File 2 — core/state.py</h3>
+    <p>A dataclass that carries all file paths between pipeline phases — the pipeline's shared baton.</p>
+
+    <div class="prompt-box ai">
+      <div class="prompt-label">AI Coding Prompt</div>
+      <pre><code>"""
+Create core/state.py with a PipelineState dataclass:
+  run_id: str                  # timestamp id for this run (see audit.new_run_id)
+  input_files: list[str]       # paths to original CSV files
+  business_intent: str         # the user's business question
+  profile_path: Optional[str]  # Phase 1: profiler output JSON
+  bronze_sttm_path: Optional[str]
+  bronze_paths: list[str]      # Phase 2: Bronze parquet files
+  silver_sttm_path: Optional[str]
+  silver_paths: list[str]
+  gold_sttm_path: Optional[str]
+  gold_paths: list[str]
+  report_path: Optional[str]   # final HTML report
+
+Use @dataclass. Default all Optional fields to None,
+all list fields to field(default_factory=list).
+Import Optional from typing, field from dataclasses.
+"""</code></pre>
+    </div>
+
+    <h3>File 3 — core/audit.py</h3>
+    <p>An append-only JSONL logger plus the run-id helper. One log file per run, named by a readable timestamp.</p>
+
+    <div class="prompt-box ai">
+      <div class="prompt-label">AI Coding Prompt</div>
+      <pre><code>"""
+Create core/audit.py.
+
+def new_run_id() -> str:
+    # Human-readable run id based on local time, e.g. "20260718_191117"
+    return datetime.now().strftime("%Y%m%d_%H%M%S")
+
+class AuditLogger:
+  __init__(self, run_id: str | None = None):
+    self.run_id = run_id or new_run_id()
+    self.log_path = AUDIT_DIR / f"{self.run_id}.jsonl"
+
+  log(self, agent: str, action: str, **kwargs) -> None:
+    Append one JSON line: {"timestamp": ISO-UTC, "run_id": ...,
+    "agent": ..., "action": ..., **kwargs}
+
+  get_logs(self) -> list[dict]:
+    Return all logged entries for this run_id ([] if none).
+
+Import AUDIT_DIR from core.config. Use
+datetime.now(timezone.utc).isoformat() for timestamps.
+Open the file in append mode ("a").
+"""</code></pre>
+    </div>
+
+    <div class="prompt-box note">
+      <div class="prompt-label">Why a timestamp run id?</div>
+      <p>Every artifact (STTM CSVs, parquet files, the HTML report, the audit log) is stamped with <span class="inline-code">run_id</span>. Using a timestamp like <span class="inline-code">20260718_191117</span> instead of a random UUID means your outputs sort chronologically and are self-describing — trainees can instantly tell which report is theirs.</p>
+    </div>
+
+    <h3>Checkpoint</h3>
+    <ul class="checklist">
+      <li><span class="check-icon">✓</span> <span class="inline-code">from core.config import ensure_dirs; ensure_dirs()</span> creates all dirs</li>
+      <li><span class="check-icon">✓</span> <span class="inline-code">from core.state import PipelineState</span> imports without error</li>
+      <li><span class="check-icon">✓</span> <span class="inline-code">from core.audit import new_run_id; print(new_run_id())</span> prints a timestamp</li>
+      <li><span class="check-icon">✓</span> AuditLogger writes and reads back a test JSONL entry</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     STEP 3 — Data Profiler Agent
+════════════════════════════════════════════════════ -->
+<div class="step-card theme-bronze" id="step3" data-nav>
+  <div class="step-header">
+    <div class="step-num">3</div>
+    <div>
+      <div class="step-title">Profiler Agent — Understand the Raw Data</div>
+      <div class="step-sub">Scan every CSV and compute quality stats — pure Python, no LLM</div>
+    </div>
+    <span class="step-tag">🔶 Phase 1a · ~20 min</span>
+    <span class="step-chevron">▼</span>
+  </div>
+  <div class="step-body">
+
+    <h3>What the profiler does (no writes to the data layers yet)</h3>
+    <p>The profiler reads every input CSV and, for each column, computes: dtype, null percentage, unique count, sample values, and numeric min/max/mean. It also flags quality issues like mixed date formats and finds candidate join keys. <strong>This is deterministic Python — it does not call the LLM.</strong> Output is a single JSON file that the STTM generator will read.</p>
+
+    <h3>Key output structure</h3>
+    <pre><code>{
+  "run_id": "20260718_191117",
+  "tables": {
+    "sales_data": {
+      "row_count": 186,
+      "columns": {
+        "transaction_date": {
+          "dtype": "object", "null_pct": 0.0, "unique_count": 186,
+          "sample_values": ["01/15/2024", "2024-01-17", "..."],
+          "quality_flags": ["mixed_date_formats"]
+        }
+      }
+    }
+  },
+  "candidate_join_keys": { "product_id": ["sales_data", "products"] }
+}</code></pre>
+
+    <div class="prompt-box ai">
+      <div class="prompt-label">AI Coding Prompt</div>
+      <pre><code>"""
+Create agents/profiler.py. Main function:
+  def profile(file_paths: list[str], run_id: str) -> str
+
+NO LLM in this agent - it is pure pandas.
+
+Requirements:
+1. Load each CSV with pd.read_csv(fp, low_memory=False)
+2. For every column compute: dtype (as str), null_count, null_pct,
+   unique_count, sample_values (up to 5 distinct non-null values),
+   and min/max/mean for numeric columns.
+3. Detect quality flags per column:
+   - "mixed_date_formats": object column where >10% of values match
+     MM/DD/YYYY AND >10% match YYYY-MM-DD
+   - "possible_abbreviations": object column with avg string length < 6
+4. Find candidate join keys: column names ending in "_id" that appear
+   in 2 or more tables.
+5. Write the full profile dict to:
+   PROFILES_DIR / f"profile_combined_{run_id}.json"
+6. Log with AuditLogger (agent="profiler", action="completed").
+7. Return the output file path.
+
+Import path constants from core.config, AuditLogger from core.audit.
+"""</code></pre>
+    </div>
+
+    <div class="prompt-box note">
+      <div class="prompt-label">Key Insight — context engineering</div>
+      <p>The profiler turns dirty raw data into a compact, structured summary. That summary — not the raw rows — is what the STTM generator feeds to the LLM in Step&nbsp;4. Small, factual context = cheaper, more reliable LLM calls.</p>
+    </div>
+
+    <h3>Quick test</h3>
+    <pre><code>python -c "
+from agents.profiler import profile
+from core.audit import new_run_id
+path = profile(['data/landing/sales_data.csv','data/landing/products.csv'], new_run_id())
+print('Profile written to:', path)
+"</code></pre>
+
+    <h3>Checkpoint</h3>
+    <ul class="checklist">
+      <li><span class="check-icon">✓</span> Profile JSON written under <span class="inline-code">data/profiles/</span> with the timestamp run id</li>
+      <li><span class="check-icon">✓</span> <span class="inline-code">mixed_date_formats</span> flag appears on <span class="inline-code">transaction_date</span></li>
+      <li><span class="check-icon">✓</span> <span class="inline-code">candidate_join_keys</span> lists <span class="inline-code">product_id</span> and <span class="inline-code">store_id</span></li>
+    </ul>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     STEP 4 — STTM Generator (transformation contract)
+════════════════════════════════════════════════════ -->
+<div class="step-card theme-bronze" id="step4">
+  <div class="step-header">
+    <div class="step-num">4</div>
+    <div>
+      <div class="step-title">STTM Generator — The Transformation Contract</div>
+      <div class="step-sub">The LLM converts the profile into Bronze, Silver &amp; Gold rule CSVs (LLM calls 1–3)</div>
+    </div>
+    <span class="step-tag">🔶 Phase 1b–3b · ~30 min</span>
+    <span class="step-chevron">▼</span>
+  </div>
+  <div class="step-body">
+
+    <h3>What is an STTM?</h3>
+    <p>Source-to-Target Mapping — a CSV where each row is one transformation rule. Agents read their STTM and execute it in Python. This separates <em>what to do</em> (STTM, LLM-generated) from <em>how to do it</em> (agent code, deterministic Python). <strong>These are 3 of the 4 LLM calls in the whole pipeline.</strong></p>
+
+    <table>
+      <tr><th>Column</th><th>Example</th><th>Meaning</th></tr>
+      <tr><td>source_schema</td><td>landing</td><td>Origin schema/layer</td></tr>
+      <tr><td>source_table</td><td>sales_data</td><td>Origin table name</td></tr>
+      <tr><td>source_column</td><td>transaction_date</td><td>Column to transform (<span class="inline-code">*</span> = table-level)</td></tr>
+      <tr><td>target_schema</td><td>bronze</td><td>Destination schema/layer</td></tr>
+      <tr><td>target_table</td><td>sales_data_bronze</td><td>Destination table name</td></tr>
+      <tr><td>target_column</td><td>transaction_date</td><td>Output column name</td></tr>
+      <tr><td>transformation_type</td><td>type_cast</td><td>Category of rule</td></tr>
+      <tr><td>transformation_logic</td><td>datetime</td><td>Implementation hint the agent reads</td></tr>
+    </table>
+
+    <h3>Supported transformation logic (what the agents in Steps 5–7 understand)</h3>
+    <div class="two-col">
+      <div>
+        <p><strong>Bronze — fidelity only:</strong></p>
+        <ul>
+          <li><span class="inline-code">type_cast</span> — datetime / float / int / str</li>
+          <li><span class="inline-code">metadata_inject</span> — _load_timestamp, _source_file</li>
+          <li><span class="inline-code">passthrough</span> — copy as-is</li>
+        </ul>
+      </div>
+      <div>
+        <p><strong>Silver — cleanse:</strong></p>
+        <ul>
+          <li><span class="inline-code">drop null</span> / <span class="inline-code">fill null</span> (mean/median/mode/0)</li>
+          <li><span class="inline-code">date</span> — normalise to YYYY-MM-DD</li>
+          <li><span class="inline-code">lowercase</span> / <span class="inline-code">uppercase</span> / <span class="inline-code">title case</span></li>
+          <li><span class="inline-code">strip</span> · <span class="inline-code">deduplicate</span> · <span class="inline-code">surrogate_key</span></li>
+        </ul>
+      </div>
+    </div>
+    <div style="margin-top:8px">
+      <p><strong>Gold — analytics (intent-driven):</strong> <span class="inline-code">join</span> (join_left:table_a:table_b:key) · <span class="inline-code">group_by</span> · <span class="inline-code">aggregate</span> (SUM, AVG, COUNT, MAX, MIN)</p>
+    </div>
+
+    <div class="prompt-box ai">
+      <div class="prompt-label">AI Coding Prompt</div>
+      <pre><code>"""
+Create agents/sttm_generator.py with three public functions and a
+shared LLM helper (GitHub Models via LangChain - see the LLM pattern
+in the Reference Card).
+
+1. generate_bronze_sttm(profile_path, business_intent, run_id) -> str
+   - Read the profile JSON
+   - Build a prompt with: table schemas, sample values, quality flags
+   - Ask the LLM for a CSV with the 8 required columns:
+     source_schema, source_table, source_column, target_schema,
+     target_table, target_column, transformation_type, transformation_logic
+   - Rules to generate: type_cast for every column (infer type from
+     dtype/flags), plus metadata_inject rows for _load_timestamp and _source_file
+   - Parse the CSV from the response (look for a ```csv fence first, then raw CSV)
+   - Validate the required columns exist, save to
+     STTM_DIR / f"sttm_bronze_{run_id}.csv"; return the path.
+     Bronze is intent-agnostic - map every column.
+
+2. generate_silver_sttm(bronze_paths, bronze_sttm_path, business_intent, run_id) -> str
+   - Read the bronze parquet files (pandas) for schemas + sample values
+   - Include the prior Bronze STTM as context
+   - Ask the LLM for Silver cleansing rules: drop/fill null, date standardise,
+     text normalise (lower/upper/title/strip), deduplicate, surrogate_key
+   - Save to STTM_DIR / f"sttm_silver_{run_id}.csv"; return the path.
+
+3. generate_gold_sttm(silver_paths, silver_sttm_path, business_intent, run_id) -> str
+   - Read the silver parquet schemas; include the prior Silver STTM as context
+   - Ask the LLM for Gold rules that answer business_intent:
+     join rules (format join_left:table_a:table_b:key), group_by columns,
+     aggregate columns (SUM/AVG/COUNT). Gold IS shaped by the intent.
+   - Save to STTM_DIR / f"sttm_gold_{run_id}.csv"; return the path.
+
+Helpers: _extract_csv(text) (```csv fence first, then raw) and
+_validate_and_save(csv_text, out_path) (check the 8 required columns).
+Log each generation with AuditLogger. Use full run_id in filenames (no truncation).
+"""</code></pre>
+    </div>
+
+    <div class="prompt-box tip">
+      <div class="prompt-label">Tip — inspect STTM output manually</div>
+      <p>After building this, generate a Bronze STTM and open the CSV in a spreadsheet. You should see one row per column of each CSV plus two <span class="inline-code">metadata_inject</span> rows per table. This is the contract the Bronze Agent will execute — and the thing you approve at the first HITL gate.</p>
+    </div>
+
+    <h3>Checkpoint</h3>
+    <ul class="checklist">
+      <li><span class="check-icon">✓</span> <span class="inline-code">sttm_bronze_&lt;run_id&gt;.csv</span> has the 8 required columns</li>
+      <li><span class="check-icon">✓</span> The <span class="inline-code">transaction_date</span> row has <span class="inline-code">type_cast / datetime</span></li>
+      <li><span class="check-icon">✓</span> Two <span class="inline-code">metadata_inject</span> rows per source table</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     STEP 5 — Bronze Agent
+════════════════════════════════════════════════════ -->
+<div class="step-card theme-bronze" id="step5">
+  <div class="step-header">
+    <div class="step-num">5</div>
+    <div>
+      <div class="step-title">Bronze Agent — CSV to Parquet with Type Casting</div>
+      <div class="step-sub">Executes the approved Bronze STTM in pandas — deterministic, no LLM</div>
+    </div>
+    <span class="step-tag">🔶 Phase 2a · ~20 min</span>
+    <span class="step-chevron">▼</span>
+  </div>
+  <div class="step-body">
+
+    <h3>Bronze layer contract</h3>
+    <p>Bronze is the <strong>fidelity layer</strong> — no business logic, no joins. Only: type casting, column renaming, and two metadata columns. Row count in = row count out. <strong>No LLM: the agent just applies the STTM rules with pandas.</strong></p>
+
+    <div class="two-col">
+      <div>
+        <p><strong>Input (per table):</strong></p>
+        <ul><li>Raw CSV file</li><li>The approved Bronze STTM slice for this table</li></ul>
+      </div>
+      <div>
+        <p><strong>Output (per table):</strong></p>
+        <ul><li>Parquet in <span class="inline-code">data/bronze_layer/</span></li><li>All columns type-cast</li><li><span class="inline-code">_load_timestamp</span>, <span class="inline-code">_source_file</span> added</li></ul>
+      </div>
+    </div>
+
+    <div class="prompt-box ai">
+      <div class="prompt-label">AI Coding Prompt</div>
+      <pre><code>"""
+Create agents/bronze_agent.py. Main function:
+  def run(input_files: list[str], sttm_path: str, run_id: str) -> list[str]
+
+NO LLM - deterministic pandas execution of the approved STTM.
+
+For each input CSV:
+1. Extract the table name from the filename stem ("sales_data.csv" -> "sales_data")
+2. Read the STTM CSV; filter rows whose source_table matches this table
+3. Read the CSV with pd.read_csv(fp)
+4. For each STTM rule:
+   - type_cast: apply per transformation_logic
+       datetime -> pd.to_datetime(col, errors="coerce")
+       float    -> pd.to_numeric(col, errors="coerce")
+       int      -> pd.to_numeric(col, errors="coerce").astype("Int64")
+       str      -> col.astype(str)
+     and rename source_column -> target_column
+   - passthrough: copy the column unchanged
+   (skip metadata_inject rows here - handled next)
+5. Inject metadata columns in Python:
+   df["_load_timestamp"] = datetime.now(timezone.utc).isoformat()
+   df["_source_file"]    = str(fp)
+6. Write BRONZE_DIR / f"{table}_bronze_{run_id}.parquet"
+   with df.to_parquet(..., index=False)
+7. Audit-log the input_shape and output_shape.
+Return the list of written parquet paths.
+"""</code></pre>
+    </div>
+
+    <div class="prompt-box note">
+      <div class="prompt-label">Why deterministic?</div>
+      <p>Keeping Bronze/Silver/Gold in pure Python is the core efficiency of this design: the LLM writes the <em>rules</em> once (the STTM), and cheap, reproducible Python does the heavy data work every time. That is why the whole pipeline needs only 4 LLM calls.</p>
+    </div>
+
+    <h3>Checkpoint</h3>
+    <ul class="checklist">
+      <li><span class="check-icon">✓</span> 3 Parquet files written to <span class="inline-code">data/bronze_layer/</span></li>
+      <li><span class="check-icon">✓</span> <span class="inline-code">pd.read_parquet(...).dtypes</span> shows datetime64 for <span class="inline-code">transaction_date</span></li>
+      <li><span class="check-icon">✓</span> Row count equals the source CSV row count (~186 for sales_data)</li>
+      <li><span class="check-icon">✓</span> <span class="inline-code">_load_timestamp</span> and <span class="inline-code">_source_file</span> columns present</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     STEP 6 — Silver Agent
+════════════════════════════════════════════════════ -->
+<div class="step-card theme-silver" id="step6">
+  <div class="step-header">
+    <div class="step-num">6</div>
+    <div>
+      <div class="step-title">Silver Agent — Cleanse, Standardize &amp; Deduplicate</div>
+      <div class="step-sub">Applies the Silver STTM in pandas: nulls, dates, text, dedup, surrogate keys — no LLM</div>
+    </div>
+    <span class="step-tag">⬜ Phase 3a · ~25 min</span>
+    <span class="step-chevron">▼</span>
+  </div>
+  <div class="step-body">
+
+    <h3>Silver layer contract</h3>
+    <p>Silver is the <strong>quality layer</strong>. It reads Bronze Parquet and applies cleansing rules from the Silver STTM. Row count may decrease (dedup). A surrogate integer key is added as the first column. <strong>No LLM — the agent reads each rule's <span class="inline-code">transformation_logic</span> keyword and runs the matching pandas operation.</strong></p>
+
+    <h3>How the agent maps logic keywords to pandas</h3>
+    <table>
+      <tr><th>transformation_logic contains…</th><th>pandas operation</th></tr>
+      <tr><td><span class="inline-code">drop null</span> / <span class="inline-code">remove null</span></td><td><span class="inline-code">df.dropna(subset=[col])</span></td></tr>
+      <tr><td><span class="inline-code">fill null</span> + mean/median/mode/0</td><td><span class="inline-code">df[col].fillna(df[col].mean()/median()/mode()/0)</span></td></tr>
+      <tr><td><span class="inline-code">date</span> / <span class="inline-code">datetime</span></td><td><span class="inline-code">pd.to_datetime(col, errors="coerce").dt.strftime('%Y-%m-%d')</span></td></tr>
+      <tr><td><span class="inline-code">integer</span> / <span class="inline-code">float</span> / <span class="inline-code">numeric</span></td><td><span class="inline-code">pd.to_numeric(col, errors="coerce")</span></td></tr>
+      <tr><td><span class="inline-code">lowercase</span> / <span class="inline-code">uppercase</span> / <span class="inline-code">title case</span></td><td><span class="inline-code">col.str.lower() / .upper() / .title()</span></td></tr>
+      <tr><td><span class="inline-code">strip</span> / <span class="inline-code">trim</span></td><td><span class="inline-code">col.str.strip()</span></td></tr>
+      <tr><td><span class="inline-code">deduplic</span></td><td><span class="inline-code">df.drop_duplicates()</span></td></tr>
+    </table>
+
+    <div class="prompt-box ai">
+      <div class="prompt-label">AI Coding Prompt</div>
+      <pre><code>"""
+Create agents/silver_agent.py. Main function:
+  def run(bronze_paths: list[str], sttm_path: str, run_id: str) -> list[str]
+
+NO LLM - deterministic pandas.
+
+For each bronze parquet file:
+1. Read it with pd.read_parquet(fp)
+2. Match STTM rows to this table using flexible matching:
+   compare on the file stem AND the stem with "_bronze_&lt;run_id&gt;" stripped.
+3. For each rule, inspect transformation_logic (lowercased) and apply the
+   matching pandas op (see the keyword -> pandas table above):
+   drop/fill null, date standardise to YYYY-MM-DD, numeric casts,
+   lower/upper/title case, strip, deduplicate. Rename source_column ->
+   target_column when they differ.
+4. Insert a surrogate key as the FIRST column:
+   df.insert(0, f"pk_{base_name}_silver_id", range(1, len(df)+1))
+5. Keep only the STTM-approved target columns (plus the surrogate key).
+6. Write SILVER_DIR / f"{base_name}_silver_{run_id}.parquet"
+7. Audit-log input_shape and output_shape.
+Return the list of written paths.
+"""</code></pre>
+    </div>
+
+    <div class="prompt-box note">
+      <div class="prompt-label">Design Note</div>
+      <p>Silver only unifies categories if the STTM contains a normalise rule for that column. If the LLM did not generate one, abbreviations like <span class="inline-code">Elec.</span> vs <span class="inline-code">ELECTRONICS</span> persist to Gold — visible in the report as separate rows. That is expected, and it is exactly what the HITL gate lets you catch and fix by editing the STTM.</p>
+    </div>
+
+    <h3>Checkpoint</h3>
+    <ul class="checklist">
+      <li><span class="check-icon">✓</span> 3 Silver Parquet files in <span class="inline-code">data/silver_layer/</span></li>
+      <li><span class="check-icon">✓</span> <span class="inline-code">transaction_date</span> values all match the <span class="inline-code">YYYY-MM-DD</span> pattern</li>
+      <li><span class="check-icon">✓</span> <span class="inline-code">pk_sales_data_silver_id</span> is the first column and starts at 1</li>
+      <li><span class="check-icon warn">⚠</span> Row count ≤ Bronze (dedup may reduce it slightly)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     STEP 7 — Gold Agent
+════════════════════════════════════════════════════ -->
+<div class="step-card theme-gold" id="step7">
+  <div class="step-header">
+    <div class="step-num">7</div>
+    <div>
+      <div class="step-title">Gold Agent — Join, Group &amp; Aggregate for Analytics</div>
+      <div class="step-sub">Merges Silver tables and aggregates per the Gold STTM — deterministic, no LLM</div>
+    </div>
+    <span class="step-tag">🥇 Phase 4a · ~20 min</span>
+    <span class="step-chevron">▼</span>
+  </div>
+  <div class="step-body">
+
+    <h3>Gold layer contract</h3>
+    <p>Gold is the <strong>analytics layer</strong> — table(s) purpose-built for the business question. It joins Silver tables on common ID columns and applies GROUP BY + aggregations. Result sets are typically &lt;50 rows. <strong>No LLM — the agent executes the Gold STTM's join / group_by / aggregate rules with pandas.</strong></p>
+
+    <h3>STTM Gold rule format the agent reads</h3>
+    <pre><code><span class="cm"># join rule</span>
+transformation_type  = join
+transformation_logic = join_left:sales_data_silver:products_silver:product_id
+<span class="cm"># -> df = sales_data_silver.merge(products_silver, on="product_id", how="left")</span>
+
+<span class="cm"># aggregate rule</span>
+transformation_type  = aggregate
+transformation_logic = SUM(total_amount) AS total_revenue
+
+<span class="cm"># group_by rule</span>
+transformation_type  = group_by
+target_column        = category</code></pre>
+
+    <div class="prompt-box ai">
+      <div class="prompt-label">AI Coding Prompt</div>
+      <pre><code>"""
+Create agents/gold_agent.py. Main function:
+  def run(silver_paths: list[str], sttm_path: str,
+          business_intent: str, run_id: str) -> list[str]
+
+NO LLM - deterministic pandas.
+
+1. Load every silver parquet into a dict keyed by clean table name
+   (register a few name variants so matching is forgiving).
+2. Group STTM rows by target_table to know which Gold table(s) to build.
+3. For each target Gold table:
+   - Parse join rules "join_left:A:B:key" and merge with pandas:
+       df = tables[A].merge(tables[B], on=key, how="left")
+   - Apply column renames (source_column -> target_column).
+   - Apply group_by + aggregate rules:
+       df.groupby(group_cols).agg({col: "sum"/"mean"/"count"/...}).reset_index()
+   - Keep only the STTM-approved target columns.
+   - Insert a surrogate key: df.insert(0, "pk_gold_id", range(1, len(df)+1))
+4. Write GOLD_DIR / f"{target_table}_{run_id}.parquet"
+5. Audit-log. Return the list of written paths.
+"""</code></pre>
+    </div>
+
+    <h3>Checkpoint</h3>
+    <ul class="checklist">
+      <li><span class="check-icon">✓</span> 1 Gold Parquet file in <span class="inline-code">data/gold_layer/</span></li>
+      <li><span class="check-icon">✓</span> Row count much smaller than Silver (aggregated — typically 8–30 rows)</li>
+      <li><span class="check-icon">✓</span> Columns include an aggregate like <span class="inline-code">total_revenue</span></li>
+      <li><span class="check-icon">✓</span> <span class="inline-code">pk_gold_id</span> starts at 1</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     STEP 8 — Reporter
+════════════════════════════════════════════════════ -->
+<div class="step-card theme-report" id="step8">
+  <div class="step-header">
+    <div class="step-num">8</div>
+    <div>
+      <div class="step-title">Reporter — Generate the HTML Analytics Report</div>
+      <div class="step-sub">The LLM writes the analysis SQL + narrative (LLM call 4); DuckDB executes it; Plotly renders the charts</div>
+    </div>
+    <span class="step-tag">📊 Phase 4b · ~25 min</span>
+    <span class="step-chevron">▼</span>
+  </div>
+  <div class="step-body">
+
+    <h3>What the reporter produces</h3>
+    <p>A self-contained HTML file with: an executive answer, interactive Plotly charts, a data table, and the SQL that produced the results. Opens in any browser, no server needed. <strong>This is the 4th and final LLM call.</strong></p>
+
+    <h3>LLM output format (the 4th LLM call)</h3>
+    <pre><code>SQL:
+```sql
+SELECT category, SUM(total_revenue) AS revenue
+FROM gold_table GROUP BY category ORDER BY revenue DESC
+```
+
+NARRATIVE:
+Electronics led Q1 2024 with $142,500 in revenue (38% of total),
+followed by Home &amp; Kitchen at $95,000 (25%)...
+
+CHARTS:
+```json
+[
+  {"type": "bar", "x": "category", "y": "revenue", "title": "Revenue by Category"},
+  {"type": "pie", "x": "category", "y": "revenue", "title": "Revenue Share"}
+]
+```</code></pre>
+
+    <div class="prompt-box ai">
+      <div class="prompt-label">AI Coding Prompt</div>
+      <pre><code>"""
+Create agents/reporter.py. Main function:
+  def generate_report(gold_paths: list[str],
+                      business_intent: str, run_id: str) -> str
+
+This agent DOES use the LLM (call 4 of 4) - via the same GitHub Models
+helper as the STTM generator.
+
+1. Load the gold parquet files into an in-memory DuckDB connection
+   (conn.register / read_parquet). DuckDB executes the SQL deterministically.
+2. Build a schema context string: table names, columns, types, a few sample rows.
+3. ONE LLM call: send schema + business_intent, ask for three labelled sections:
+     SQL:       a DuckDB SELECT that answers the question
+     NARRATIVE: a 2-3 paragraph executive summary
+     CHARTS:    a JSON array of chart specs {type, x, y, title}
+4. Parse the response: _extract_sql (```sql fence, then bare SELECT),
+   _extract_narrative (text after "NARRATIVE:"),
+   _extract_json_block (```json after "CHARTS:").
+5. Execute the SQL via DuckDB (retry once if it errors; fall back to
+   SELECT * FROM first_gold_table LIMIT 20).
+6. Render charts with plotly.express (bar/pie/line) -> fig.to_html(full_html=False).
+7. Build the data table with df.to_html(index=False).
+8. Assemble a self-contained HTML page: header with the business_intent,
+   an Executive Answer card (narrative), a Charts grid, a Data Table card,
+   and the SQL in a &lt;pre&gt; block. Footer: run_id + timestamp.
+9. Write REPORTS_DIR / f"report_{run_id}.html"
+   and REPORTS_DIR / f"report_{run_id}.json" (a machine summary).
+10. Audit-log. Return the HTML path.
+"""</code></pre>
+    </div>
+
+    <div class="prompt-box tip">
+      <div class="prompt-label">Tip — build the template with test data first</div>
+      <p>Wire up the HTML layout and Plotly rendering with hardcoded data before adding the LLM call. Then you know the output works before debugging any LLM parsing.</p>
+    </div>
+
+    <h3>Checkpoint</h3>
+    <ul class="checklist">
+      <li><span class="check-icon">✓</span> <span class="inline-code">report_&lt;run_id&gt;.html</span> exists in <span class="inline-code">reports/</span></li>
+      <li><span class="check-icon">✓</span> The file opens in a browser without errors</li>
+      <li><span class="check-icon">✓</span> At least one Plotly chart renders (bar or pie)</li>
+      <li><span class="check-icon">✓</span> The data table shows aggregated Gold data</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     STEP 9 — CLI & Orchestrator
+════════════════════════════════════════════════════ -->
+<div class="step-card theme-cli" id="step9" data-nav>
+  <div class="step-header">
+    <div class="step-num">9</div>
+    <div>
+      <div class="step-title">Orchestrator — CLI with HITL Approval Gates</div>
+      <div class="step-sub">Wire all agents into a 4-phase pipeline; pause at each STTM for human review</div>
+    </div>
+    <span class="step-tag">🖥 CLI · ~25 min</span>
+    <span class="step-chevron">▼</span>
+  </div>
+  <div class="step-body">
+
+    <h3>The 4 phases (in cli.py)</h3>
+    <pre><code><span class="cm"># Phase 1 - Profile (Python) + Bronze STTM (LLM 1)</span>
+state.profile_path     = profiler.profile(files, run_id)
+state.bronze_sttm_path = sttm_gen.generate_bronze_sttm(profile_path, intent, run_id)
+<span class="kw">if not</span> hitl_gate(<span class="st">"Bronze"</span>, state.bronze_sttm_path): <span class="kw">return</span> state
+
+<span class="cm"># Phase 2 - Bronze execution (Python) + Silver STTM (LLM 2)</span>
+state.bronze_paths     = bronze_agent.run(files, bronze_sttm_path, run_id)
+state.silver_sttm_path = sttm_gen.generate_silver_sttm(bronze_paths, bronze_sttm_path, intent, run_id)
+<span class="kw">if not</span> hitl_gate(<span class="st">"Silver"</span>, state.silver_sttm_path): <span class="kw">return</span> state
+
+<span class="cm"># Phase 3 - Silver execution (Python) + Gold STTM (LLM 3)</span>
+state.silver_paths     = silver_agent.run(bronze_paths, silver_sttm_path, run_id)
+state.gold_sttm_path   = sttm_gen.generate_gold_sttm(silver_paths, silver_sttm_path, intent, run_id)
+<span class="kw">if not</span> hitl_gate(<span class="st">"Gold"</span>, state.gold_sttm_path): <span class="kw">return</span> state
+
+<span class="cm"># Phase 4 - Gold execution (Python) + Report (LLM 4)</span>
+state.gold_paths   = gold_agent.run(silver_paths, gold_sttm_path, intent, run_id)
+state.report_path  = reporter.generate_report(gold_paths, intent, run_id)</code></pre>
+
+    <div class="prompt-box ai">
+      <div class="prompt-label">AI Coding Prompt — cli.py</div>
+      <pre><code>"""
+Create cli.py - the interactive pipeline orchestrator.
+
+Functions:
+1. banner(text): print a highlighted header line.
+2. display_sttm(sttm_path, layer): load the CSV with pandas and print it
+   with tabulate(tablefmt="rounded_outline").
+3. hitl_gate(layer, sttm_path) -> bool:
+   - call display_sttm
+   - loop on input "[y]es / [e]dit then re-review / [n]o abort > "
+       y -> return True
+       e -> open the CSV in $EDITOR (fallback notepad/nano), then re-display and loop
+       n -> print abort, return False
+4. run_pipeline(files, intent) -> PipelineState:
+   - ensure_dirs()
+   - run_id = new_run_id()          # timestamp id from core.audit
+   - state  = PipelineState(run_id=run_id, input_files=files, business_intent=intent)
+   - run the 4 phases above, calling hitl_gate after each STTM
+   - print run_id, report_path and audit log path at the end
+   - return state
+5. main(): argparse --files (nargs="+") and --intent (str); prompt if missing;
+   call run_pipeline.
+if __name__ == "__main__": main()
+
+Copy each input file into data/landing/ first, but skip the copy if the source
+is already inside data/landing/ (guard: src.resolve() != dest.resolve()).
+Import new_run_id and AuditLogger from core.audit; import every agent.
+"""</code></pre>
+    </div>
+
+    <div class="prompt-box note">
+      <div class="prompt-label">The HITL gate is the point</div>
+      <p>Between generating each STTM and executing it, the pipeline stops and shows you the rules. You approve (<span class="inline-code">y</span>), or edit the CSV and re-review (<span class="inline-code">e</span>). This is where a human catches a bad mapping before it corrupts the whole downstream layer — loop engineering in action.</p>
+    </div>
+
+    <h3>Checkpoint</h3>
+    <ul class="checklist">
+      <li><span class="check-icon">✓</span> <span class="inline-code">python cli.py --help</span> shows <span class="inline-code">--files</span> and <span class="inline-code">--intent</span></li>
+      <li><span class="check-icon">✓</span> The HITL gate displays the STTM table and waits for your input</li>
+      <li><span class="check-icon">✓</span> Choosing <span class="inline-code">e</span> opens the CSV, then re-displays it after you save</li>
+      <li><span class="check-icon">✓</span> PipelineState holds all file paths at the end of a run</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     STEP 10 — Run & Validate
+════════════════════════════════════════════════════ -->
+<div class="step-card theme-run" id="step10" data-nav>
+  <div class="step-header">
+    <div class="step-num">10</div>
+    <div>
+      <div class="step-title">Run, Validate &amp; Explore</div>
+      <div class="step-sub">Execute the full pipeline end-to-end, inspect outputs, try different business questions</div>
+    </div>
+    <span class="step-tag">✅ Validation · ~15 min</span>
+    <span class="step-chevron">▼</span>
+  </div>
+  <div class="step-body">
+
+    <h3>Full end-to-end run (interactive, with HITL gates)</h3>
+    <pre><code>python cli.py \
+  --files data/landing/sales_data.csv data/landing/products.csv data/landing/stores.csv \
+  --intent "Which product category generated the highest total sales revenue?"</code></pre>
+    <p>At each of the 3 gates, review the STTM and type <span class="inline-code">y</span> to approve (or <span class="inline-code">e</span> to edit first).</p>
+
+    <h3>What to verify in each output</h3>
+    <table>
+      <tr><th>Output file</th><th>What to check</th></tr>
+      <tr><td><span class="inline-code">data/profiles/profile_combined_&lt;run_id&gt;.json</span></td><td>mixed_date_formats flag on transaction_date; candidate_join_keys lists product_id + store_id</td></tr>
+      <tr><td><span class="inline-code">data/sttm/sttm_bronze_&lt;run_id&gt;.csv</span></td><td>8 required columns; type_cast rows + 2 metadata_inject rows per table</td></tr>
+      <tr><td><span class="inline-code">data/bronze_layer/*_bronze_&lt;run_id&gt;.parquet</span></td><td>Row count = source CSV count; _load_timestamp present; datetime dtype on dates</td></tr>
+      <tr><td><span class="inline-code">data/sttm/sttm_silver_&lt;run_id&gt;.csv</span></td><td>date + text-normalise + dedup rows for sales_data</td></tr>
+      <tr><td><span class="inline-code">data/silver_layer/*_silver_&lt;run_id&gt;.parquet</span></td><td>All dates YYYY-MM-DD; surrogate key starts at 1</td></tr>
+      <tr><td><span class="inline-code">data/sttm/sttm_gold_&lt;run_id&gt;.csv</span></td><td>join + group_by + aggregate rows</td></tr>
+      <tr><td><span class="inline-code">data/gold_layer/*_&lt;run_id&gt;.parquet</span></td><td>Few rows (aggregated); an aggregate column like total_revenue</td></tr>
+      <tr><td><span class="inline-code">reports/report_&lt;run_id&gt;.html</span></td><td>Opens in browser; narrative answers the question; ≥1 chart renders</td></tr>
+      <tr><td><span class="inline-code">audit_logs/&lt;run_id&gt;.jsonl</span></td><td>Entries for each major agent step</td></tr>
+    </table>
+
+    <h3>Quick inspection commands</h3>
+    <pre><code><span class="cm"># Inspect any parquet file</span>
+python -c "import pandas as pd, glob; print(pd.read_parquet(glob.glob('data/gold_layer/*.parquet')[0]))"
+
+<span class="cm"># Count audit log entries for the latest run</span>
+python -c "
+import json, pathlib
+f = sorted(pathlib.Path('audit_logs').glob('*.jsonl'))[-1]
+logs = [json.loads(l) for l in f.read_text().splitlines() if l.strip()]
+print(f'{len(logs)} audit entries in {f.name}')
+for e in logs: print(f'  {e[\"agent\"]:16} {e[\"action\"]}')"
+
+<span class="cm"># Open the report (just double-click it, or serve the folder)</span>
+python -m http.server 8080 --directory reports
+<span class="cm"># then open http://localhost:8080 in your browser</span></code></pre>
+
+    <h3>Try different business questions</h3>
+    <div class="prompt-box ai">
+      <div class="prompt-label">Exploration — re-run with a new --intent</div>
+      <pre><code>"Which customer segment had the highest total spending?"
+
+"How does revenue break down by region?"
+
+"What is the average order value per store?"
+
+"Which month in Q1 2024 had the most transactions?"</code></pre>
+    </div>
+
+    <div class="prompt-box note">
+      <div class="prompt-label">What changes with a different intent?</div>
+      <p>Only the <strong>Gold</strong> STTM changes — different GROUP BY columns and aggregations. Bronze and Silver STTMs stay the same (they are intent-agnostic quality rules). That is the power of the medallion architecture: re-use clean Bronze/Silver data to answer many different questions.</p>
+    </div>
+
+    <hr>
+
+    <h3>Extension challenges for advanced trainees</h3>
+    <ol>
+      <li><strong>Full category normalisation</strong> — add a Silver rule (via the STTM) that unifies <span class="inline-code">Elec.</span> / <span class="inline-code">ELECTRONICS</span> / <span class="inline-code">Electronic</span> into one canonical value using a lookup map.</li>
+      <li><strong>Swap the provider</strong> — set <span class="inline-code">LLM_PROVIDER=groq</span> (or anthropic/gemini) and add that branch to the LLM helper; confirm the same pipeline runs unchanged.</li>
+      <li><strong>Add a returns filter</strong> — let the user include/exclude rows where <span class="inline-code">total_amount &lt; 0</span>.</li>
+      <li><strong>Add a second dataset</strong> — introduce <span class="inline-code">customers.csv</span> and wire its join through the Gold STTM.</li>
+    </ol>
+
+    <h3>Final checklist</h3>
+    <ul class="checklist">
+      <li><span class="check-icon">✓</span> Full pipeline runs end-to-end with no uncaught exceptions</li>
+      <li><span class="check-icon">✓</span> The HTML report opens and answers the question correctly</li>
+      <li><span class="check-icon">✓</span> The audit log has entries from every agent</li>
+      <li><span class="check-icon">✓</span> The HITL gate lets you edit an STTM mid-run</li>
+      <li><span class="check-icon">✓</span> Re-running with a new <span class="inline-code">--intent</span> works without changing any code</li>
+      <li><span class="check-icon">✓</span> All output filenames share the same timestamp <span class="inline-code">run_id</span></li>
+    </ul>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<!-- ═══════════════════════════════════════════════════════
+     TROUBLESHOOTING
+═══════════════════════════════════════════════════════ -->
+<div class="section-band" id="trouble" data-nav>
+  <div class="section-title">🩹 Troubleshooting</div>
+  <div class="section-desc">The most common issues trainees hit, and the fix for each.</div>
+</div>
+<div class="container" style="padding-top:14px; padding-bottom:0;">
+<div class="step-card">
+  <div class="step-header" style="background:#f9fafb;">
+    <div style="font-size:1.2rem">🩹</div>
+    <div>
+      <div class="step-title">Common errors &amp; fixes</div>
+      <div class="step-sub">Paste any error into your AI assistant too — it can usually fix it in one turn</div>
+    </div>
+    <span class="step-chevron">▼</span>
+  </div>
+  <div class="step-body">
+    <table>
+      <tr><th>Symptom</th><th>Likely cause</th><th>Fix</th></tr>
+      <tr><td><span class="inline-code">401 Unauthorized</span> on an LLM call</td><td>Token wrong or expired</td><td>Regenerate the PAT at github.com/settings/tokens and update <span class="inline-code">.env</span></td></tr>
+      <tr><td><span class="inline-code">404</span> / model not found</td><td>Model id missing the publisher prefix</td><td>Ensure <span class="inline-code">GITHUB_MODEL</span> normalises to <span class="inline-code">openai/gpt-4.1-mini</span> (Step 2 config)</td></tr>
+      <tr><td><span class="inline-code">429 Too Many Requests</span></td><td>GitHub Models free-tier rate limit</td><td>Wait ~60 seconds and re-run the phase — outputs on disk make it resumable</td></tr>
+      <tr><td><span class="inline-code">ModuleNotFoundError: langchain_openai</span></td><td>Dependencies not installed</td><td><span class="inline-code">pip install -r requirements.txt</span></td></tr>
+      <tr><td><span class="inline-code">ModuleNotFoundError: core</span></td><td>Running from the wrong folder, or missing <span class="inline-code">__init__.py</span></td><td>Run from the project root; add empty <span class="inline-code">core/__init__.py</span> &amp; <span class="inline-code">agents/__init__.py</span></td></tr>
+      <tr><td>Empty STTM (0 rows)</td><td>LLM returned malformed / unfenced CSV</td><td>Re-run the phase; make the prompt insist on a <span class="inline-code">```csv</span> block only</td></tr>
+      <tr><td><span class="inline-code">.env</span> values not picked up</td><td><span class="inline-code">load_dotenv()</span> not called, or <span class="inline-code">.env</span> not in the root</td><td>Confirm <span class="inline-code">core/config.py</span> calls <span class="inline-code">load_dotenv()</span> and <span class="inline-code">.env</span> is beside it</td></tr>
+      <tr><td><span class="inline-code">KeyError</span> on a Gold join</td><td>Join key missing in a Silver table</td><td>Check <span class="inline-code">candidate_join_keys</span> in the profile and the Gold STTM join rule</td></tr>
+      <tr><td>Report has no charts</td><td>Chart-spec JSON malformed</td><td>Check the reporter's <span class="inline-code">_extract_json_block</span>; re-run — it should still show the table + SQL</td></tr>
+      <tr><td><span class="inline-code">EOFError</span> at a HITL gate</td><td>stdin was piped, not interactive</td><td>Run <span class="inline-code">cli.py</span> in a real terminal window so you can type <span class="inline-code">y</span></td></tr>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- ───────────────── REFERENCE CARD ───────────────── -->
+<div class="container" style="padding-top:24px;">
+<div class="step-card" id="reference" data-nav style="border-color:#e5e7eb;">
+  <div class="step-header" style="background:#f9fafb;">
+    <div style="font-size:1.2rem">📋</div>
+    <div>
+      <div class="step-title">Reference Card — Files, Model &amp; the LLM Pattern</div>
+      <div class="step-sub">Quick reference while building</div>
+    </div>
+    <span class="step-chevron">▼</span>
+  </div>
+  <div class="step-body">
+    <div class="two-col">
+      <div>
+        <h3>Files to create (in order)</h3>
+        <div class="file-tree">
+          <span class="new">core/config.py</span> &nbsp;<span class="note">Step 2</span><br>
+          <span class="new">core/state.py</span> &nbsp;&nbsp;<span class="note">Step 2</span><br>
+          <span class="new">core/audit.py</span> &nbsp;&nbsp;<span class="note">Step 2</span><br>
+          <span class="new">agents/profiler.py</span> &nbsp;<span class="note">Step 3</span><br>
+          <span class="new">agents/sttm_generator.py</span> &nbsp;<span class="note">Step 4</span><br>
+          <span class="new">agents/bronze_agent.py</span> &nbsp;<span class="note">Step 5</span><br>
+          <span class="new">agents/silver_agent.py</span> &nbsp;<span class="note">Step 6</span><br>
+          <span class="new">agents/gold_agent.py</span> &nbsp;<span class="note">Step 7</span><br>
+          <span class="new">agents/reporter.py</span> &nbsp;<span class="note">Step 8</span><br>
+          <span class="new">cli.py</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="note">Step 9</span>
+        </div>
+      </div>
+      <div>
+        <h3>LLM call budget — 4 total</h3>
+        <table>
+          <tr><th>Call #</th><th>Agent</th><th>Generates</th></tr>
+          <tr><td>1</td><td>sttm_generator</td><td>Bronze STTM CSV</td></tr>
+          <tr><td>2</td><td>sttm_generator</td><td>Silver STTM CSV</td></tr>
+          <tr><td>3</td><td>sttm_generator</td><td>Gold STTM CSV</td></tr>
+          <tr><td>4</td><td>reporter</td><td>SQL + narrative + charts</td></tr>
+        </table>
+        <p style="font-size:0.78rem;color:#9ca3af;margin-top:6px">Profiler and the Bronze/Silver/Gold agents use <strong>no LLM</strong> — they run deterministically in Python. The LLM writes the rules; Python does the data work.</p>
+      </div>
+    </div>
+
+    <hr>
+
+    <h3>LLM client pattern — GitHub Models via LangChain (paste into any agent that needs the LLM)</h3>
+    <pre><code><span class="kw">from</span> core.config <span class="kw">import</span> GITHUB_TOKEN, GITHUB_BASE_URL, GITHUB_MODEL
+
+_llm = <span class="kw">None</span>
+
+<span class="kw">def</span> <span class="fn">_make_llm</span>():
+    <span class="st">"""GitHub Models is an OpenAI-compatible endpoint, so we use LangChain's
+    ChatOpenAI with a custom base_url."""</span>
+    <span class="kw">global</span> _llm
+    <span class="kw">if</span> _llm <span class="kw">is None</span>:
+        <span class="kw">from</span> langchain_openai <span class="kw">import</span> ChatOpenAI
+        _llm = ChatOpenAI(
+            api_key=GITHUB_TOKEN,
+            base_url=GITHUB_BASE_URL,      <span class="cm"># https://models.github.ai/inference</span>
+            model=GITHUB_MODEL,            <span class="cm"># openai/gpt-4.1-mini</span>
+            temperature=0,
+        )
+    <span class="kw">return</span> _llm
+
+<span class="kw">def</span> <span class="fn">_call_llm</span>(prompt: str) -> str | <span class="kw">None</span>:
+    <span class="kw">try</span>:
+        <span class="kw">return</span> _make_llm().invoke(prompt).content
+    <span class="kw">except</span> Exception <span class="kw">as</span> e:
+        print(<span class="st">f"[LLM] call failed: {e}"</span>)
+        <span class="kw">return None</span></code></pre>
+
+    <div class="prompt-box tip">
+      <div class="prompt-label">Swapping providers later</div>
+      <p>Because everything goes through <span class="inline-code">_make_llm()</span>, you can support Groq / Anthropic / Gemini by branching on <span class="inline-code">LLM_PROVIDER</span> and returning the matching LangChain chat model — the rest of the pipeline never changes.</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="footer">
+  Intent-Driven Agentic Medallion Pipeline (IDAMP) &nbsp;·&nbsp; Trainee Quick-Start Guide &nbsp;·&nbsp;
+  <span style="color:#d1d5db">Build time ~2 hours · 10 steps · GitHub Models gpt-4.1-mini · 4 LLM calls · Bronze → Silver → Gold → HTML</span>
+</div>
+
+<button id="toTop" title="Back to top">↑</button>
+
+<script>
+  (function () {
+    var bar = document.getElementById('progress');
+    var toTop = document.getElementById('toTop');
+    var navLinks = Array.prototype.slice.call(document.querySelectorAll('.topnav a'));
+    var sections = Array.prototype.slice.call(document.querySelectorAll('[data-nav]'));
+
+    function onScroll() {
+      var h = document.documentElement;
+      var max = h.scrollHeight - h.clientHeight;
+      var pct = max > 0 ? (h.scrollTop / max) * 100 : 0;
+      bar.style.width = pct + '%';
+      toTop.classList.toggle('show', h.scrollTop > 400);
+
+      var cur = '';
+      sections.forEach(function (s) {
+        if (s.getBoundingClientRect().top < 140) cur = s.id;
+      });
+      navLinks.forEach(function (a) {
+        a.classList.toggle('active', a.getAttribute('href') === '#' + cur);
+      });
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    toTop.addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // collapsible step cards
+    document.querySelectorAll('.step-header').forEach(function (h) {
+      h.addEventListener('click', function () {
+        h.closest('.step-card').classList.toggle('collapsed');
+      });
+    });
+
+    function setAll(collapsed) {
+      document.querySelectorAll('.step-card').forEach(function (c) {
+        c.classList.toggle('collapsed', collapsed);
+      });
+    }
+    document.getElementById('expandAll').addEventListener('click', function () { setAll(false); });
+    document.getElementById('collapseAll').addEventListener('click', function () { setAll(true); });
+  })();
+</script>
+
+</body>
+</html>
